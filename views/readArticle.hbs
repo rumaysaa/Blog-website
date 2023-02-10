@@ -1,0 +1,105 @@
+{{#ifEquals data.Article.userID session.user._id}}
+<div class="row">
+    <div class="col-sm-9"></div>
+    <div class=" col-sm-3 btn-group btn-group-sm" role="group">
+        <a class="btn  btn-outline-dark" href="/articles/form?id={{data.Article._id}}" style="width: 100%;"
+            role="button">
+            <span class="fas fa-edit"></span>
+        </a>
+        <a class="btn   btn-outline-dark " href="/articles/delete?id={{data.Article._id}}" style="width: 100%;"
+            role="button">
+            <span class="fas fa-trash-alt"></span>
+        </a>
+    </div>
+</div>
+{{/ifEquals}}
+<br>
+<h1 class="display-5" style="text-align: center; font-family:Times New Roman, serif;">{{data.Article.heading}}</h1>
+<br>
+<br>
+<p style="text-align: justify;font-family:Verdana, sans-serif">
+    &emsp;&emsp;&emsp;
+    {{data.Article.description}}</p>
+<br>
+<br>
+<br>
+<hr>
+{{#if session.user}}
+<form action="/comments?id={{data.Article._id}}" method="POST" style="border: 0ch;">
+    <input type="hidden" id="_id" value="{{data.Article._id}}" name="articleID">
+    {{#if data.imageBase64}}
+    <img src="data:image/png;base64,{{data.imageBase64}}" class="img-circle avatar" alt="Profile Photo"
+        style="border-radius: 50%; margin-right:8px" width="7%">
+    {{else}}
+    <img src="/Deafult-Profile-Pitcher.png" class="img-circle avatar" alt="Profile Photo"
+        style="border-radius: 50%; margin-right:8px" width="7%">
+    {{/if}}
+    {{session.user.name}}
+    <div class="form-floating">
+        <input type="hidden" id="_id" value="{{session.user._id}}" name="userID">
+    </div><br>
+    <div class="form-floating row">
+        <div class="col-sm-7"><textarea class="form-control form-control-sm pb-cmnt-textarea" id="comment"
+                name="comment" placeholder="Leave a comment here"></textarea></div>
+        <div class="col-sm-3"><input type="submit" value="Submit" class="btn btn-sm btn-dark" style="margin-top: 15px;">
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+
+</form>
+{{else}}
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+        <span class="d-block p-1 bg-dark text-white" style=" margin:auto; text-align:center">To Comment Below, Please
+            <a class="btn btn-light" href="/users/login?url=/comments&id={{data.Article._id}}" role="button">Login</a>
+        </span>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+{{/if}}
+<br><br>
+{{#if data.com}}
+<h4 style="font-family:Garamond, serif"><u>Comments</u></h4>
+{{/if}}
+<br>
+{{#each data.com}}
+<div class="row">
+    <div class="col-sm-1" style="margin-top: 5px;">
+        <figure>
+            {{#if imageBase64}}
+            <img src="data:image/png;base64,{{imageBase64}}" class="img-circle avatar" alt="Profile Photo"
+                style="border-radius: 50%; margin-right:8px" width="7%">
+            {{else}}
+            <img src="/Deafult-Profile-Pitcher.png" class="img-circle avatar" alt="Profile Photo"
+                style="border-radius: 50%; margin-right:8px" width="7%">
+            {{/if}}
+    </div>
+    <div class="col-sm-4" style="margin-top: 10px;">
+        <blockquote class="blockquote">
+            <p style="text-align: justify; font-size:17px;text-align:left">{{comment}}
+            </p>
+    </div>
+    </blockquote>
+    <div class="col-sm-6">
+        {{#ifEquals userID._id @root.session.user._id}}
+        <a class="btn" style="color: black;" href="/comments/delete?id={{_id}}&articleID={{articleID}}" style="width: 100%;" role="button">
+            <span class="far fa-trash-alt"></span>
+        </a>
+        {{/ifEquals}}
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5">
+        <figcaption class="blockquote-footer">
+            {{userID.name}}
+            <br><div style="font-weight: lighter;">{{time}}</div>
+        </figcaption>
+    </div>
+    <div class="col-sm-5"></div>
+    </figure>
+</div>
+<hr style="width: 50%;" align="left">
+{{/each}}

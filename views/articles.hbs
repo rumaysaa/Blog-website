@@ -1,0 +1,21 @@
+    <br>
+    <div class="table-responsive-sm">
+        
+        <table class="table table-hover center" style="width: 80%; margin:auto">
+            <tr>
+                <th>Articles</th>
+                <th>Catagories</th>
+                <th>Author</th>
+            </tr>
+            {{#each data.list}}
+            <tr>
+                <td><a href="/comments?id={{_id}}" style="color:gray;">{{heading}}</a></td>
+                <td>{{categoryID.catName}}</td>
+                <td 
+                    {{#ifEquals userID._id @root.session.user._id}}style="font-weight: bold;"{{/ifEquals}}
+                    >{{userID.name}}</td>            
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+    

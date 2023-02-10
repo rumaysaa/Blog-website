@@ -1,0 +1,35 @@
+<form action="/catagories" method="POST" style="border: 0ch;">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <table style=" margin-left:auto ;" >
+                <tr>
+                    <td><input type="text" id="catName" name="catName" value="{{data.cat.catName}}" minlength="3" required
+                            {{#if data.msg}}class="form-control is-invalid form-control form-control-sm" {{/if}}
+                            class="form-control form-control-sm" 
+                            ></td>
+                    <td ><input type="submit" id="submit" name="submit" value="Add"
+                            class="form-control form-control-md btn-outline-secondary"></td>
+                </tr>
+            </table>
+            {{#if data.msg}}
+                <div style="color: red;text-align:right;margin-right:15%;font-size:small">
+                {{data.msg}}
+                </div>
+            {{/if}}
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</form>
+<br><br>
+<div class="table-responsive-md">
+    <table class="table table-hover center" style="width: 70%; margin:auto; text-align: center;">
+        {{#each data.cat}}
+        <tr>
+            <small>
+                <td>{{catName}}</td>
+            </small>
+        </tr>
+        {{/each}}
+    </table>
+</div>

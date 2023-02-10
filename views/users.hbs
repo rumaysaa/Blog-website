@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-8">
+    <form action="/users" method="post" style="margin-top: 6%;">
+      <br>
+      <h3 style="text-align: center;"><b>Register</b></h3>
+      <br>
+      <div class="container">
+        <input type="text" class="form-control-sm" placeholder="Enter Your Name" value="{{user.name}}" name="name"
+          required>
+        <br>
+        <input type="text" {{#if user.Mailmsg}} class="form-control is-invalid" {{/if}} class="form-control-sm"
+          id="mail" name="mail" value="{{user.mail}}" placeholder="name@example.com" required>
+        <div class="invalid-feedback">
+          {{user.Mailmsg}}
+        </div>
+        
+        <input type="password" name="password" minlength="5"placeholder="Password" {{#if user.msg}} class="form-control is-invalid"
+          {{/if}} class="form-control-sm" required>
+        <input type="password" name="confirmPass" placeholder="Confirm Password" {{#if user.msg}}
+          class="form-control is-invalid" {{/if}} class="form-control-sm" id="inputPassword" required>
+        <div class="invalid-feedback">
+          {{user.msg}}
+        </div>
+      </div></b>
+      <br>
+      <div class="container" style="background-color:#f1f1f1">
+        <input type="submit" name="submit" value="Submit" class=" btn btn-dark">
+      </div>
+    </form>
+  </div>
+  <div class="col-lg-2"></div>
+</div>

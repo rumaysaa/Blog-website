@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <form action="/users/login" method="post" style="margin-top: 6%;">
+            {{#if user.activateMsg}}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <h6 class="alert-heading">
+                    <p>{{user.activateMsg}}</p><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <hr>
+            </div>
+            {{/if}}
+            {{#if user.msg}}
+            <div class=" alert alert-dark alert-dismissible fade show" role="alert">
+                
+                {{user.msg}}
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            </div>
+            {{/if}}
+            <br>
+            <h2 style="text-align: center;"><b>Login Form</b></h2>
+            <br><input type="hidden" name="url" value="{{user.url}}">
+            <input type="hidden" id="_id" value="{{user.id}}" name="articleID">
+            <div class="container">
+                <label for="mail"><b>Email</b></label>
+                <input type="text" placeholder="name@example.com" {{#if user.incPass}} class="form-control is-valid"
+                    {{else}} {{#if user.incMail}} class="form-control is-invalid" {{/if}} {{/if}} name="mail"
+                    value="{{user.mail}}" required>
+                <label for="password"><b>Password</b></label>
+                <input type="password" {{#if user.passMsg}}class="form-control is-invalid" {{/if}}
+                    placeholder="Enter Password" name="password" required><br>
+                {{#if user.passMsg}}
+                <div class="invalid-feedback">
+                    {{user.passMsg}}
+                </div>
+                {{/if}}
+                <br>
+                <a href="/users/verifyMail" style="color:darkblue;">Forgot Password?</a>
+
+                <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+
+            </div>
+            <br>
+            <div class="container" style="background-color:#f1f1f1">
+                <a href="/articles" type="button" class=" btn btn-danger btn-sm">Cancel</a><br>
+                <p style="color: gray;font-family: Times New Roman, Times, serif;;font-size: 15px; padding:5px">
+                    Don't have an account? <u><a href="/users">Register</a></p></u>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3"></div>
+</div>

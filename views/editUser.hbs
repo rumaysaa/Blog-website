@@ -1,0 +1,105 @@
+<div class="row">
+    <div class="col-lg-3"><br><br>
+        <div class="imgcontainer">
+            <h5  style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Profile Photo</h5>
+            {{#if imageBase64}}
+            <img src="data:image/png;base64,{{imageBase64}}" class="img-fluid" style="width: 70%;" alt="Avatar"><br><br>
+            {{else}}
+            <img src="/Deafult-Profile-Pitcher.png"class="img-fluid" style="width: 70%;" alt="Avatar">
+            {{/if}}
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 btn  btn-sm btn-outline-info" id="divEditProfilePhoto">
+                    <a href="#" type="button" onclick="editProfilePhoto(event);" style="color: black;">
+                        <span class="far fa-edit" style="text-align: right;"></span></a>
+                </div>
+                <div class="col-sm-2"></div>
+                <div class="col" style="display: none;" id="divProfilePhotoButtons">
+                    <br><br>
+                    <form action="/users/profile" method="post" id="uploadProfileForm" enctype="multipart/form-data"
+                        style="border: 0;">
+                        <input type="file" class="form-control" id="profileImage" name="image">
+                        <label class="input-group-text">Upload a Profile Photo</label>
+                        <input type="button" onclick="fileFunction()" class="btn btn-sm btn-info" value="Submit">
+                        <button type="button" onclick="cancelProfilePhoto()"
+                            class="btn btn-info btn-sm">Cancel</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <form action="/users/editUser" method="post" style="margin-top: 6%;" id="myForm">
+            <div class="container">
+                <br>
+                <b><label for="mail">Email address</label><br></b>
+                <input type="text" class="form-control-sm" disabled="true" class="form-control-plaintext"
+                    value="{{user.mail}}" id="mail" name="mail" required>
+                <input type="hidden" class="form-control-sm" value="{{user._id}}" name="id"><br><br>
+                <label for="name"><b>Name</label>
+                <div class="row">
+                    <div class="col-sm-10">
+                        <input type="text" id="name" style="width: 100%;" class="form-control-sm" value="{{user.name}}"
+                            name="name" required disabled=true>
+                    </div>
+                    <div class="col" style="margin: auto;"><button type="button" id="editUserName" onclick="editName()" class="btn btn-info btn-sm col">
+                            <span class="far fa-edit" style="text-align: right;"></span></button>
+                    </div>
+                </div>
+                <div style="display: none;" id="divUpdateNameButtons">
+                    <button type="submit" class="btn  btn-info btn-sm">Save</button>
+                    <button type="button" onclick="cancelEditName()" class="btn btn-info btn-sm">Cancel</button>
+                </div>
+                <script>
+                    getE("btn").disabled = true;
+                    function editName() {
+                        getE("name").disabled = false;
+                        getE("editUserName").style.display = 'none';
+                        getE("divUpdateNameButtons").style.display = 'block';
+                    };
+                    function cancelEditName() {
+                        getE("myForm").reset()
+                        getE("name").disabled = true;
+                        getE("editUserName").style.display = 'block';
+                        getE("divUpdateNameButtons").style.display = 'none';
+                    }
+                    function editProfilePhoto(e) {
+                        console.log("inevent");
+                        e.preventDefault();
+                        getE("divEditProfilePhoto").style.display = 'none';
+                        getE("divProfilePhotoButtons").style.display = 'block';
+                    }
+                    function cancelProfilePhoto() {
+                        getE("divProfilePhotoButtons").style.display = 'none';
+                        getE("divEditProfilePhoto").style.display = 'block';
+                    }
+                    function fileFunction() {
+                        var x = document.getElementById("profileImage");
+                        if (x.files[0]) {
+                            if (x.files[0].size > 500000) {
+                                alert("File size Cannot be more than 500kB");
+                            }
+                            else {
+                                var f = document.getElementById("uploadProfileForm");
+                                f.submit();
+                            }
+                        }
+                        else {
+                            alert("Select File First");
+                        }
+                    }
+                </script>
+                <br>
+            </div></b>
+            <div class="row" style="margin-left: auto;margin-right:auto">
+                <div class="col-sm-10">
+                    <a type="button" class=" btn btn-outline-info btn-sm col-lg-4" href="/users/changePassword">Change
+                        Password</a>
+                </div>
+                <div class="col-sm-2"></div>
+            </div><br><br>
+        </form>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
