@@ -35,7 +35,7 @@ Thought Space is a feature-rich blogging application that makes content creation
 
 1. Clone and install:
 ```bash
-git clone https://github.com/yourusername/Blog-website.git
+git clone https://github.com/rumaysaa/Blog-website.git
 cd Blog-website
 npm install
 ```
