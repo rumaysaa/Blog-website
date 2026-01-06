@@ -1,61 +1,142 @@
-<form action="/articles/add?id={{data.art._id}}" method="POST" style="margin-top: 6%; border:0px">
-<input type="hidden" name="userID" value="{{session.user._id}}">
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-3 fw-bolder">
-            <label for="catName">Choose Catagory:</label>
+<div class="container" style="max-width: 800px; margin-top: 3%;">
+    <div class="form-container">
+        {{#if @root.query.msg}}
+        <div class="alert alert-danger" style="margin-bottom: 2rem; padding: 1rem; border-radius: 6px; border-left: 4px solid #e74c3c;">
+            <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>{{@root.query.msg}}
         </div>
-        <div class="col-sm-5">
-            <table style="width: 90%;">
-                <tr>
-                    <td style="width: 60%;"><select name="categoryID"  value="{{data.art.categoryID}}"
-                            class="form-select form-control">
-                            {{#each data.cats}}
-                            <option value="{{_id}}" {{#selected @root.data.art.categoryID _id}} {{/selected}}>
-                                {{catName}}</option>
-                            {{/each}}
-                        </select></td>
-                    <td>&nbsp;<a class="btn btn-sm btn-dark" href="/catagories" role="button">+</a></td>
-                </tr>
-            </table>
-        </div>
-        <div class="col-sm-2"></div>
+        {{/if}}
+
+        <h2 style="margin-bottom: 2rem;">
+            {{#if data.art._id}}
+            <i class="fas fa-edit" style="margin-right: 0.5rem;"></i>Edit Article
+            {{else}}
+            <i class="fas fa-pen-fancy" style="margin-right: 0.5rem;"></i>Write New Article
+            {{/if}}
+        </h2>
+
+        <form action="/articles/add?id={{data.art._id}}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="userID" value="{{session.user._id}}">
+            <input type="hidden" id="_id" value="{{data.art._id}}" name="articleID">
+
+            <div class="form-group">
+                <label class="form-label" for="categoryID">
+                    <i class="fas fa-folder" style="margin-right: 0.5rem;"></i>Category
+                </label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <select 
+                        name="categoryID" 
+                        value="{{data.art.categoryID}}"
+                        class="form-control form-select"
+                        style="flex: 1;">
+                        <option value="">Select a category...</option>
+                        {{#each data.cats}}
+                        <option value="{{_id}}" {{#selected @root.data.art.categoryID _id}} {{/selected}}>
+                            {{catName}}
+                        </option>
+                        {{/each}}
+                    </select>
+                    <a class="btn btn-sm btn-outline-primary" href="/catagories" role="button" title="Manage Categories">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="coverPhoto">
+                    <i class="fas fa-image" style="margin-right: 0.5rem;"></i>Cover Photo
+                </label>
+                <input 
+                    type="file" 
+                    id="coverPhoto" 
+                    name="coverPhoto" 
+                    accept="image/*"
+                    class="form-control"
+                    style="padding: 0.5rem;">
+                <small style="color: #7f8c8d; display: block; margin-top: 0.3rem;">
+                    <i class="fas fa-info-circle"></i> Accepted formats: JPG, PNG, GIF (Max 5MB)
+                </small>
+                <div id="fileError" style="color: #e74c3c; font-size: 0.9rem; margin-top: 0.5rem; display: none;">
+                    <i class="fas fa-times-circle" style="margin-right: 0.3rem;"></i><span id="errorMsg"></span>
+                </div>
+                <div id="fileSuccess" style="color: #27ae60; font-size: 0.9rem; margin-top: 0.5rem; display: none;">
+                    <i class="fas fa-check-circle" style="margin-right: 0.3rem;"></i><span id="successMsg"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="heading">
+                    <i class="fas fa-heading" style="margin-right: 0.5rem;"></i>Article Title
+                </label>
+                <input 
+                    type="text" 
+                    id="heading" 
+                    name="heading" 
+                    value="{{data.art.heading}}"
+                    placeholder="Enter an engaging title for your article"
+                    class="form-control"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="description">
+                    <i class="fas fa-align-left" style="margin-right: 0.5rem;"></i>Article Content
+                </label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    rows="12"
+                    placeholder="Write your amazing article here..."
+                    class="form-control pb-cmnt-textarea"
+                    required>{{data.art.description}}</textarea>
+                <small style="color: #7f8c8d; display: block; margin-top: 0.3rem;">
+                    <i class="fas fa-info-circle"></i> Make sure your content is clear and engaging
+                </small>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    <i class="fas fa-save" style="margin-right: 0.5rem;"></i>{{#if data.art._id}}Update{{else}}Publish{{/if}} Article
+                </button>
+                <a href="/articles" class="btn btn-cancel" style="flex: 1; text-align: center; text-decoration: none;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>Cancel
+                </a>
+            </div>
+        </form>
     </div>
-    </br>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-3  fw-bolder">
-            <label for="heading">Heading :</label>
-        </div>
-        <div class="col-sm-5">
-            <input type="text" id="heading" name="heading" value="{{data.art.heading}}"
-                class="form-control form-control-sm" required>
-        </div>
-        <div class="col-sm-2"></div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-3  fw-bolder">
-            <label for="w3review">Article :</label>
-        </div>
-        <div class="col-sm-5">
-            <textarea id="description" name="description" rows="9" value="{{data.art.description}}"
-                class="form-control form-control-sm" required>
-            {{data.art.description}}
-            </textarea>
-        </div>
-        <div class="col-sm-2"><input type="hidden" id="_id" value="{{data.art._id}}" name="articleID"></div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-3"></div>
-        <div class="col-sm-2 d-grid gap-2 d-md-flex justify-content-md-start btn">
-            <input type="submit" name="submit" value="Save" class="btn btn-sm btn-dark" style="width: 90px;">
-        </div>
-</form>
-<div class="col-sm-2 d-grid gap-2 d-md-flex justify-content-md-start btn">
-    <a class="btn btn-sm btn-dark" href="/articles" role="button" style="width: 90px;">Cancel</a>
 </div>
-<div class="col-sm-3"></div>
+
+<script>
+document.getElementById('coverPhoto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const fileError = document.getElementById('fileError');
+    const fileSuccess = document.getElementById('fileSuccess');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    const maxSize = 5 * 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    
+    fileError.style.display = 'none';
+    fileSuccess.style.display = 'none';
+    
+    if (!file) return;
+    
+    if (!allowedTypes.includes(file.type)) {
+        errorMsg.textContent = 'Invalid file type. Only JPG, PNG, and GIF are allowed.';
+        fileError.style.display = 'block';
+        e.target.value = '';
+        return;
+    }
+    
+    if (file.size > maxSize) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        errorMsg.textContent = `File is too large (${sizeMB}MB). Maximum size is 5MB.`;
+        fileError.style.display = 'block';
+        e.target.value = '';
+        return;
+    }
+    
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+    successMsg.textContent = `${file.name} (${sizeMB}MB) - Ready to upload`;
+    fileSuccess.style.display = 'block';
+});
+</script>

@@ -1,35 +1,61 @@
-<form action="/catagories" method="POST" style="border: 0ch;">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-6">
-            <table style=" margin-left:auto ;" >
-                <tr>
-                    <td><input type="text" id="catName" name="catName" value="{{data.cat.catName}}" minlength="3" required
-                            {{#if data.msg}}class="form-control is-invalid form-control form-control-sm" {{/if}}
-                            class="form-control form-control-sm" 
-                            ></td>
-                    <td ><input type="submit" id="submit" name="submit" value="Add"
-                            class="form-control form-control-md btn-outline-secondary"></td>
-                </tr>
-            </table>
+<div class="container" style="max-width: 700px; margin-top: 3%;">
+    <h1 class="page-title">Manage Categories</h1>
+    <p class="page-subtitle">Create and organize article categories</p>
+
+    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 2rem;">
+        <h5 style="margin-bottom: 1.5rem; color: var(--primary-color); font-weight: 700;">
+            <i class="fas fa-plus-circle" style="margin-right: 0.5rem;"></i>Add New Category
+        </h5>
+
+        <form action="/catagories" method="POST">
             {{#if data.msg}}
-                <div style="color: red;text-align:right;margin-right:15%;font-size:small">
+            <div class="alert alert-custom alert-danger-custom alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
                 {{data.msg}}
-                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             {{/if}}
-        </div>
-        <div class="col-md-1"></div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <input 
+                    type="text" 
+                    id="catName" 
+                    name="catName" 
+                    value="{{data.cat.catName}}" 
+                    minlength="3"
+                    placeholder="Enter category name..."
+                    class="form-control"
+                    {{#if data.msg}}class="is-invalid"{{/if}}
+                    required
+                    style="flex: 1;">
+                <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem;">
+                    <i class="fas fa-plus" style="margin-right: 0.5rem;"></i>Add
+                </button>
+            </div>
+        </form>
     </div>
-</form>
-<br><br>
-<div class="table-responsive-md">
-    <table class="table table-hover center" style="width: 70%; margin:auto; text-align: center;">
-        {{#each data.cat}}
-        <tr>
-            <small>
-                <td>{{catName}}</td>
-            </small>
-        </tr>
-        {{/each}}
-    </table>
+
+    {{#if data.cat}}
+    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+        <h5 style="margin-bottom: 1.5rem; color: var(--primary-color); font-weight: 700;">
+            <i class="fas fa-list" style="margin-right: 0.5rem;"></i>Categories ({{data.cat.length}})
+        </h5>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+            {{#each data.cat}}
+            <div style="background: linear-gradient(135deg, #e8f4f8 0%, #f0f8fc 100%); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--secondary-color); text-align: center;">
+                <i class="fas fa-folder" style="color: var(--secondary-color); font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                <p style="margin: 0; font-weight: 600; color: var(--primary-color);">{{catName}}</p>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{else}}
+    <div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+        <i class="fas fa-inbox" style="font-size: 2.5rem; color: #bdc3c7; margin-bottom: 1rem; display: block;"></i>
+        <p style="color: #7f8c8d; font-size: 1rem;">No categories yet. Create one to get started!</p>
+    </div>
+    {{/if}}
 </div>
