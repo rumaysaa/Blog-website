@@ -58,37 +58,3 @@ npm run dev
 
 Visit `http://localhost:3000` in your browser.
 
-## Deployment
-
-Deploy to Heroku with automatic GitHub integration:
-
-1. Create a new app on [heroku.com](https://dashboard.heroku.com)
-2. In **Deploy** tab, connect your GitHub repository
-3. In **Settings** tab, add these Config Vars:
-   - `DB_PASS` - Your MongoDB password
-   - `MAIL_USERNAME` - Your Gmail address
-   - `MAIL_PASSWORD` - Your Gmail app password
-   - `SESSION_SECRET` - A random secure string
-   - `BASE_URL` - Your Heroku app URL
-   - `NODE_ENV` - Set to `production`
-
-4. Enable **Automatic Deploys** for the main branch
-
-Every push to GitHub will automatically redeploy your app. See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
-
-## Scripts
-
-```bash
-npm run dev    # Start with hot-reload (development)
-npm start      # Start production server
-```
-
-## File Upload Specifications
-
-- **Article Cover Photos**: Max 5MB, JPG/PNG/GIF formats
-- **Profile Photos**: Supported formats for user profiles
-- All uploads are validated server-side
-
-## License
-
-ISC
