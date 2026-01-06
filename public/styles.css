@@ -39,6 +39,7 @@ body {
     color: white !important;
     font-weight: 700;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .navbar-custom .nav-link {
@@ -46,10 +47,31 @@ body {
     font-weight: 500;
     transition: all 0.3s ease;
     margin: 0 8px;
+    padding: 0.5rem 0.8rem !important;
 }
 
 .navbar-custom .nav-link:hover {
     color: var(--secondary-color) !important;
+}
+
+.navbar-custom .navbar-toggler {
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 0.4rem 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-custom .navbar-toggler:hover {
+    border-color: var(--secondary-color);
+}
+
+.navbar-custom .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.navbar-collapse {
+    margin-top: 0;
 }
 
 .btn-custom {
@@ -290,6 +312,37 @@ textarea:focus {
 
 .form-group {
     margin-bottom: 1.2rem;
+}
+
+.form-group .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.form-flex-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.form-flex-group .form-control,
+.form-flex-group select {
+    flex: 1;
+    min-width: 0;
+}
+
+.form-flex-group .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+.btn-edit-icon {
+    padding: 0.6rem 0.8rem !important;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .form-footer {
@@ -557,11 +610,53 @@ table {
     .navbar-custom .nav-link {
         font-size: 0.85rem;
         margin: 0 4px;
-        padding: 0.5rem 0.25rem !important;
+        padding: 0.5rem 0.4rem !important;
     }
     
-    .navbar-toggler {
-        padding: 0.3rem;
+    .navbar-custom .navbar-toggler {
+        padding: 0.3rem 0.5rem;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .navbar-collapse {
+        background-color: rgba(44, 62, 80, 0.95);
+        margin-top: 0.5rem;
+        padding: 0.8rem 0;
+        border-radius: 0 0 6px 6px;
+    }
+    
+    .navbar-custom .nav-link:hover {
+        background-color: rgba(52, 152, 219, 0.1);
+    }
+    
+    /* Improve form spacing on tablets */
+    .form-flex-group {
+        gap: 0.5rem !important;
+    }
+    
+    .form-flex-group .btn,
+    .form-flex-group a.btn {
+        padding: 0.6rem 0.9rem !important;
+        font-size: 0.85rem !important;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .btn-edit-icon {
+        padding: 0.6rem 0.7rem !important;
+        min-width: 44px;
+    }
+    
+    .btn-sm {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .col-lg-4,
+    .col-lg-8 {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 1.5rem;
     }
     
     .article-grid {
@@ -637,24 +732,115 @@ table {
 @media (max-width: 575px) {
     .navbar-custom {
         padding: 0.7rem 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1030;
     }
     
     .navbar-custom .navbar-brand {
         font-size: 1.1rem;
     }
     
+    .navbar-custom .navbar-toggler {
+        padding: 0.4rem 0.6rem;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        margin-left: auto;
+    }
+    
+    .navbar-custom .navbar-toggler-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    
+    .navbar-collapse {
+        background-color: rgba(44, 62, 80, 0.95);
+        margin-top: 0.5rem;
+        border-radius: 0 0 8px 8px;
+        padding: 1rem 0;
+    }
+    
     .navbar-custom .nav-link {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.2rem !important;
-        margin: 0 2px;
+        font-size: 0.95rem;
+        padding: 0.8rem 1.5rem !important;
+        margin: 0 !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: block;
     }
     
-    .navbar-toggler {
-        padding: 0.25rem;
+    .navbar-custom .nav-link:last-child {
+        border-bottom: none;
     }
     
-    .nav-item {
-        padding: 0.25rem 0;
+    .navbar-custom .nav-link:hover {
+        background-color: rgba(52, 152, 219, 0.2);
+        color: var(--secondary-color) !important;
+    }
+    
+    .navbar-custom .nav-item {
+        padding: 0;
+    }
+    
+    .navbar-custom .btn-custom {
+        display: block;
+        width: 90%;
+        margin: 0.8rem auto;
+        text-align: center;
+        padding: 0.8rem 1rem !important;
+    }
+    
+    .navbar-custom .btn-login,
+    .navbar-custom .btn-logout {
+        margin: 0.8rem 1.5rem;
+        width: auto;
+        display: block;
+    }
+    
+    /* Form flex containers - make input larger, button smaller */
+    .form-flex-group {
+        flex-direction: column;
+        gap: 0.8rem !important;
+    }
+    
+    .form-flex-group .form-control,
+    .form-flex-group select {
+        width: 100% !important;
+    }
+    
+    .form-flex-group .btn,
+    .form-flex-group a.btn {
+        width: 100% !important;
+        padding: 0.7rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .btn-edit-icon {
+        width: 100% !important;
+        padding: 0.7rem 1rem !important;
+    }
+    
+    .btn-sm {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .btn-outline-primary {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    /* Row layout stacking on mobile */
+    .row {
+        flex-direction: column;
+    }
+    
+    .col-lg-4,
+    .col-lg-8,
+    .col-md-6 {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 1.5rem;
     }
     
     .article-grid {
@@ -844,13 +1030,6 @@ table {
     .main-container {
         padding: 0 0.75rem;
         margin-top: 80px;
-    }
-    
-    .navbar-custom {
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1030;
     }
     
     .container {
