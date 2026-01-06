@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -20,81 +15,50 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-    </style>
-    <script>
-        function getE(id) {
-            return document.getElementById(id)
-        }
-    </script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
     <link rel="stylesheet" href="/styles.css">
+    <title>My Blog</title>
 </head>
 <body>
-    <div class="container bg-light p-5" >
-        <nav class="navbar navbar-expand-lg fixed-top bg-info" style="margin-bottom: 5%;height:2cm;<!--background-color:rgb(145, 156, 193)-->">
-            <div class="container-fluid">
-                <button class="navbar-toggler btn btn-lg" data-toggle="collapse"
-                    data-target="#navbar">
-                    <i class="fas fa-bars"></i>
-                    <span class="navbar-toggler-icon"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                 <a class="navbar-brand" style="color:white;"><b>My Blog</a></b>
-                <div class="collapse navbar-collapse bg-info" id="navbar"
-                    style="color: black;">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 " >
-                        <li class="nav-item">
-                            <a class="nav-link text-white" style="text-align: center;" aria-current="page" href="/articles">Home</a>
-                        </li>
-                        <!---<li class="nav-item">
-                            <a class="nav-link text-white"style="text-align: center;" href="/catagories">Catagories</a>
-                        </li>-->
-                        <li class="nav-item">
-                            <a class="nav-link text-white"style="text-align: center;" href="/articles/form">Write an Article</a>
-                        </li>
-                        {{#if session.user}}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" style="text-align: center;"href="/users/editUser">My Profile</a>
-                        </li>
-                        {{else}}
-                        <li class="nav-item">
-                            <a class="nav-link text-white"style="text-align: center;" href="/users">Register</a>
-                        </li>
-                        {{/if}}
-                    </ul>
-                    <ul class="navbar-nav ml-auto" style="margin-right: 9%;">
-                        {{#if session.user}}
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-danger text-white" href="/users/logout">Logout</a>
-                        </li>
-                        {{else}}
-                        <li class="nav-item">
-                            <a class="nav-link btn-dark btn text-white" href="/users/login">Login</a>
-                        </li>
-                        {{/if}}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <br>
-        <hr>
-        <!--{{#if session.user}}
-        <h3 style="font-family:Garamond, serif">Welcome, {{session.user.name}}</h3>
-        <br>
-        {{/if}}-->
-        {{{body}}}
-        <!-- <nav class="navbar navbar-expand-sm fixed-bottom" style="height:1.5cm;background-color:rgb(199, 204, 220)">
-                 <div style="margin-top: 2%;margin-left:10%">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/articles">
+                <i class="fas fa-feather-alt" style="margin-right: 0.5rem;"></i>My Blog
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/articles"><i class="fas fa-home" style="margin-right: 0.5rem;"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/articles/form"><i class="fas fa-pen" style="margin-right: 0.5rem;"></i>Write Article</a>
+                    </li>
                     {{#if session.user}}
-                        <h3 style="font-family:Garamond, serif;size:20px;color:rgb(53, 53, 53)">Welcome, {{session.user.name}}</h3>
-                        <br>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/editUser"><i class="fas fa-user" style="margin-right: 0.5rem;"></i>Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-custom btn-logout" href="/users/logout"><i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout</a>
+                    </li>
+                    {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users"><i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-custom btn-login" href="/users/login"><i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Login</a>
+                    </li>
                     {{/if}}
-                 </div>
-             </div>
-        </nav>-->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        {{{body}}}
     </div>
 </body>
 </html>

@@ -1,33 +1,107 @@
-<div class="row">
-  <div class="col-lg-2"></div>
-  <div class="col-lg-8">
-    <form action="/users" method="post" style="margin-top: 6%;">
-      <br>
-      <h3 style="text-align: center;"><b>Register</b></h3>
-      <br>
-      <div class="container">
-        <input type="text" class="form-control-sm" placeholder="Enter Your Name" value="{{user.name}}" name="name"
+<div class="container" style="max-width: 500px; margin-top: 6%;">
+  <div class="form-container">
+    {{#if user.msg}}
+    <div class="alert alert-custom alert-danger-custom alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+      {{user.msg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {{/if}}
+
+    {{#if user.Mailmsg}}
+    <div class="alert alert-custom alert-danger-custom alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+      {{user.Mailmsg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {{/if}}
+
+    <h2 style="margin-bottom: 0.5rem;">Create Your Account</h2>
+    <p class="page-subtitle" style="margin-bottom: 2rem;">Join our community and start writing amazing articles</p>
+
+    <form action="/users" method="post">
+      <div class="form-group">
+        <label class="form-label" for="name">
+          <i class="fas fa-user" style="margin-right: 0.5rem;"></i>Full Name
+        </label>
+        <input 
+          type="text" 
+          id="name"
+          name="name" 
+          placeholder="John Doe" 
+          value="{{user.name}}"
           required>
-        <br>
-        <input type="text" {{#if user.Mailmsg}} class="form-control is-invalid" {{/if}} class="form-control-sm"
-          id="mail" name="mail" value="{{user.mail}}" placeholder="name@example.com" required>
-        <div class="invalid-feedback">
-          {{user.Mailmsg}}
-        </div>
-        
-        <input type="password" name="password" minlength="5"placeholder="Password" {{#if user.msg}} class="form-control is-invalid"
-          {{/if}} class="form-control-sm" required>
-        <input type="password" name="confirmPass" placeholder="Confirm Password" {{#if user.msg}}
-          class="form-control is-invalid" {{/if}} class="form-control-sm" id="inputPassword" required>
-        <div class="invalid-feedback">
-          {{user.msg}}
-        </div>
-      </div></b>
-      <br>
-      <div class="container" style="background-color:#f1f1f1">
-        <input type="submit" name="submit" value="Submit" class=" btn btn-dark">
       </div>
+
+      <div class="form-group">
+        <label class="form-label" for="mail">
+          <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>Email Address
+        </label>
+        <input 
+          type="email" 
+          id="mail"
+          name="mail" 
+          placeholder="name@example.com" 
+          value="{{user.mail}}"
+          {{#if user.Mailmsg}}class="is-invalid"{{/if}}
+          required>
+        {{#if user.Mailmsg}}
+        <div class="invalid-feedback d-block">
+          <i class="fas fa-times-circle"></i> {{user.Mailmsg}}
+        </div>
+        {{/if}}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">
+          <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>Password
+        </label>
+        <input 
+          type="password" 
+          id="password"
+          name="password" 
+          placeholder="Create a strong password" 
+          minlength="6"
+          {{#if user.msg}}class="is-invalid"{{/if}}
+          required>
+        <small style="color: #7f8c8d; display: block; margin-top: 0.3rem;">
+          <i class="fas fa-info-circle"></i> Minimum 6 characters
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirmPass">
+          <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>Confirm Password
+        </label>
+        <input 
+          type="password" 
+          id="confirmPass"
+          name="confirmPass" 
+          placeholder="Confirm your password" 
+          {{#if user.msg}}class="is-invalid"{{/if}}
+          required>
+        {{#if user.msg}}
+        <div class="invalid-feedback d-block">
+          <i class="fas fa-times-circle"></i> {{user.msg}}
+        </div>
+        {{/if}}
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Create Account
+      </button>
+
+      <div class="form-footer">
+        <p>Already have an account? <a href="/users/login">Sign in here</a></p>
+      </div>
+
+      <a href="/articles" class="btn btn-cancel" style="width: 100%; text-align: center; text-decoration: none; display: block;">
+        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>Back to Home
+      </a>
     </form>
   </div>
-  <div class="col-lg-2"></div>
 </div>

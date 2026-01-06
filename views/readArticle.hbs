@@ -1,105 +1,117 @@
-{{#ifEquals data.Article.userID session.user._id}}
-<div class="row">
-    <div class="col-sm-9"></div>
-    <div class=" col-sm-3 btn-group btn-group-sm" role="group">
-        <a class="btn  btn-outline-dark" href="/articles/form?id={{data.Article._id}}" style="width: 100%;"
-            role="button">
-            <span class="fas fa-edit"></span>
+<div class="container" style="max-width: 900px;">
+    {{#ifEquals data.Article.userID session.user._id}}
+    <div style="text-align: right; margin-bottom: 2rem;">
+        <a href="/articles/form?id={{data.Article._id}}" class="btn btn-primary" style="margin-right: 0.5rem;">
+            <i class="fas fa-edit" style="margin-right: 0.5rem;"></i>Edit Article
         </a>
-        <a class="btn   btn-outline-dark " href="/articles/delete?id={{data.Article._id}}" style="width: 100%;"
-            role="button">
-            <span class="fas fa-trash-alt"></span>
+        <a href="/articles/delete?id={{data.Article._id}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+            <i class="fas fa-trash-alt" style="margin-right: 0.5rem;"></i>Delete Article
         </a>
     </div>
-</div>
-{{/ifEquals}}
-<br>
-<h1 class="display-5" style="text-align: center; font-family:Times New Roman, serif;">{{data.Article.heading}}</h1>
-<br>
-<br>
-<p style="text-align: justify;font-family:Verdana, sans-serif">
-    &emsp;&emsp;&emsp;
-    {{data.Article.description}}</p>
-<br>
-<br>
-<br>
-<hr>
-{{#if session.user}}
-<form action="/comments?id={{data.Article._id}}" method="POST" style="border: 0ch;">
-    <input type="hidden" id="_id" value="{{data.Article._id}}" name="articleID">
-    {{#if data.imageBase64}}
-    <img src="data:image/png;base64,{{data.imageBase64}}" class="img-circle avatar" alt="Profile Photo"
-        style="border-radius: 50%; margin-right:8px" width="7%">
-    {{else}}
-    <img src="/Deafult-Profile-Pitcher.png" class="img-circle avatar" alt="Profile Photo"
-        style="border-radius: 50%; margin-right:8px" width="7%">
+    {{/ifEquals}}
+
+    <article class="article-header">
+        <h1>{{data.Article.heading}}</h1>
+    </article>
+
+    {{#if data.Article.coverPhoto}}
+    <div style="margin: 2rem 0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+        <img src="/uploads/{{data.Article.coverPhoto}}" alt="{{data.Article.heading}}" style="width: 100%; height: auto; max-height: 400px; object-fit: cover;">
+    </div>
     {{/if}}
-    {{session.user.name}}
-    <div class="form-floating">
-        <input type="hidden" id="_id" value="{{session.user._id}}" name="userID">
-    </div><br>
-    <div class="form-floating row">
-        <div class="col-sm-7"><textarea class="form-control form-control-sm pb-cmnt-textarea" id="comment"
-                name="comment" placeholder="Leave a comment here"></textarea></div>
-        <div class="col-sm-3"><input type="submit" value="Submit" class="btn btn-sm btn-dark" style="margin-top: 15px;">
-        </div>
-        <div class="col-sm-2"></div>
+
+    <div class="article-body">
+        {{data.Article.description}}
     </div>
 
-</form>
-{{else}}
-<div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <span class="d-block p-1 bg-dark text-white" style=" margin:auto; text-align:center">To Comment Below, Please
-            <a class="btn btn-light" href="/users/login?url=/comments&id={{data.Article._id}}" role="button">Login</a>
-        </span>
+    <div class="comment-section" style="margin-top: 3rem; margin-bottom: 3rem;">
+        <hr>
+        
+        {{#if session.user}}
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); margin-bottom: 2rem;">
+            <h5 style="margin-bottom: 1.5rem; color: var(--primary-color); font-weight: 700;">
+                <i class="fas fa-comment" style="margin-right: 0.5rem;"></i>Add Your Comment
+            </h5>
+            
+            <form action="/comments?id={{data.Article._id}}" method="POST">
+                <input type="hidden" value="{{data.Article._id}}" name="articleID">
+                <input type="hidden" value="{{session.user._id}}" name="userID">
+
+                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        {{#if data.imageBase64}}
+                        <img src="data:image/png;base64,{{data.imageBase64}}" class="comment-avatar" alt="Profile Photo">
+                        {{else}}
+                        <img src="/Deafult-Profile-Pitcher.png" class="comment-avatar" alt="Profile Photo">
+                        {{/if}}
+                    </div>
+                    <div style="flex: 1;">
+                        <p style="color: var(--primary-color); font-weight: 700; margin: 0;">{{session.user.name}}</p>
+                    </div>
+                </div>
+
+                <textarea 
+                    class="pb-cmnt-textarea" 
+                    id="comment" 
+                    name="comment" 
+                    placeholder="Share your thoughts..." 
+                    required></textarea>
+
+                <button type="submit" class="btn-submit" style="margin-top: 1rem; width: auto; padding: 0.6rem 2rem;">
+                    <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>Post Comment
+                </button>
+            </form>
+        </div>
+        {{else}}
+        <div class="alert alert-info" style="text-align: center; padding: 2rem; margin-bottom: 2rem;">
+            <i class="fas fa-info-circle" style="margin-right: 0.5rem; font-size: 1.3rem;"></i>
+            <p style="margin: 1rem 0 0 0;">To post a comment, please <a href="/users/login?url=/comments&id={{data.Article._id}}" class="btn btn-sm btn-primary">Login</a></p>
+        </div>
+        {{/if}}
+
+        {{#if data.com}}
+        <h4 style="margin-top: 3rem; margin-bottom: 2rem; color: var(--primary-color); font-weight: 700;">
+            <i class="fas fa-comments" style="margin-right: 0.5rem;"></i>Comments ({{data.com.length}})
+        </h4>
+
+        {{#each data.com}}
+        <div class="comment-item">
+            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div>
+                    {{#if imageBase64}}
+                    <img src="data:image/png;base64,{{imageBase64}}" class="comment-avatar" alt="Profile Photo">
+                    {{else}}
+                    <img src="/Deafult-Profile-Pitcher.png" class="comment-avatar" alt="Profile Photo">
+                    {{/if}}
+                </div>
+                <div style="flex: 1;">
+                    <div class="comment-author">
+                        {{userID.name}}
+                    </div>
+                    <div class="comment-text">
+                        {{comment}}
+                    </div>
+                    <small style="color: #95a5a6;">
+                        <i class="fas fa-clock"></i> {{time}}
+                    </small>
+                </div>
+                {{#ifEquals userID._id @root.session.user._id}}
+                <div>
+                    <a href="/comments/delete?id={{_id}}&articleID={{articleID}}" 
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Delete this comment?')">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+                {{/ifEquals}}
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <div style="text-align: center; padding: 2rem; background: white; border-radius: 8px;">
+            <i class="fas fa-comment-slash" style="font-size: 2rem; color: #bdc3c7; margin-bottom: 1rem; display: block;"></i>
+            <p style="color: #7f8c8d;">No comments yet. Be the first to share your thoughts!</p>
+        </div>
+        {{/if}}
     </div>
-    <div class="col-sm-2"></div>
 </div>
-{{/if}}
-<br><br>
-{{#if data.com}}
-<h4 style="font-family:Garamond, serif"><u>Comments</u></h4>
-{{/if}}
-<br>
-{{#each data.com}}
-<div class="row">
-    <div class="col-sm-1" style="margin-top: 5px;">
-        <figure>
-            {{#if imageBase64}}
-            <img src="data:image/png;base64,{{imageBase64}}" class="img-circle avatar" alt="Profile Photo"
-                style="border-radius: 50%; margin-right:8px" width="7%">
-            {{else}}
-            <img src="/Deafult-Profile-Pitcher.png" class="img-circle avatar" alt="Profile Photo"
-                style="border-radius: 50%; margin-right:8px" width="7%">
-            {{/if}}
-    </div>
-    <div class="col-sm-4" style="margin-top: 10px;">
-        <blockquote class="blockquote">
-            <p style="text-align: justify; font-size:17px;text-align:left">{{comment}}
-            </p>
-    </div>
-    </blockquote>
-    <div class="col-sm-6">
-        {{#ifEquals userID._id @root.session.user._id}}
-        <a class="btn" style="color: black;" href="/comments/delete?id={{_id}}&articleID={{articleID}}" style="width: 100%;" role="button">
-            <span class="far fa-trash-alt"></span>
-        </a>
-        {{/ifEquals}}
-    </div>
-    <div class="col-sm-2"></div>
-</div>
-<div class="row">
-    <div class="col-sm-1"></div>
-    <div class="col-sm-5">
-        <figcaption class="blockquote-footer">
-            {{userID.name}}
-            <br><div style="font-weight: lighter;">{{time}}</div>
-        </figcaption>
-    </div>
-    <div class="col-sm-5"></div>
-    </figure>
-</div>
-<hr style="width: 50%;" align="left">
-{{/each}}

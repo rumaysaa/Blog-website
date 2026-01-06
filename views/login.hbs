@@ -1,54 +1,89 @@
-<div class="row">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
-        <form action="/users/login" method="post" style="margin-top: 6%;">
-            {{#if user.activateMsg}}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <h6 class="alert-heading">
-                    <p>{{user.activateMsg}}</p><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <hr>
-            </div>
-            {{/if}}
-            {{#if user.msg}}
-            <div class=" alert alert-dark alert-dismissible fade show" role="alert">
-                
-                {{user.msg}}
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            </div>
-            {{/if}}
-            <br>
-            <h2 style="text-align: center;"><b>Login Form</b></h2>
-            <br><input type="hidden" name="url" value="{{user.url}}">
+<div class="container" style="max-width: 450px; margin-top: 6%;">
+    <div class="form-container">
+        {{#if user.activateMsg}}
+        <div class="alert alert-custom alert-success-custom alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>
+            {{user.activateMsg}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {{/if}}
+        
+        {{#if user.msg}}
+        <div class="alert alert-custom alert-danger-custom alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+            {{user.msg}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {{/if}}
+
+        <h2 style="margin-bottom: 0.5rem;">Welcome Back</h2>
+        <p class="page-subtitle" style="margin-bottom: 2rem;">Sign in to continue to your account</p>
+
+        <form action="/users/login" method="post">
+            <input type="hidden" name="url" value="{{user.url}}">
             <input type="hidden" id="_id" value="{{user.id}}" name="articleID">
-            <div class="container">
-                <label for="mail"><b>Email</b></label>
-                <input type="text" placeholder="name@example.com" {{#if user.incPass}} class="form-control is-valid"
-                    {{else}} {{#if user.incMail}} class="form-control is-invalid" {{/if}} {{/if}} name="mail"
-                    value="{{user.mail}}" required>
-                <label for="password"><b>Password</b></label>
-                <input type="password" {{#if user.passMsg}}class="form-control is-invalid" {{/if}}
-                    placeholder="Enter Password" name="password" required><br>
-                {{#if user.passMsg}}
-                <div class="invalid-feedback">
-                    {{user.passMsg}}
+
+            <div class="form-group">
+                <label class="form-label" for="mail">
+                    <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>Email Address
+                </label>
+                <input 
+                    type="email" 
+                    id="mail"
+                    name="mail" 
+                    placeholder="name@example.com" 
+                    value="{{user.mail}}" 
+                    {{#if user.incMail}}class="is-invalid"{{/if}}
+                    required>
+                {{#if user.incMail}}
+                <div class="invalid-feedback d-block">
+                    <i class="fas fa-times-circle"></i> Email not registered
                 </div>
                 {{/if}}
-                <br>
-                <a href="/users/verifyMail" style="color:darkblue;">Forgot Password?</a>
+            </div>
 
-                <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
-                <label>
-                    <input type="checkbox" checked="checked" name="remember"> Remember me
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>Password
                 </label>
+                <input 
+                    type="password" 
+                    id="password"
+                    name="password" 
+                    placeholder="Enter your password" 
+                    {{#if user.passMsg}}class="is-invalid"{{/if}}
+                    required>
+                {{#if user.passMsg}}
+                <div class="invalid-feedback d-block">
+                    <i class="fas fa-times-circle"></i> {{user.passMsg}}
+                </div>
+                {{/if}}
+            </div>
 
+            <div class="checkbox-custom">
+                <input type="checkbox" id="remember" name="remember" checked>
+                <label for="remember">Remember me</label>
             </div>
-            <br>
-            <div class="container" style="background-color:#f1f1f1">
-                <a href="/articles" type="button" class=" btn btn-danger btn-sm">Cancel</a><br>
-                <p style="color: gray;font-family: Times New Roman, Times, serif;;font-size: 15px; padding:5px">
-                    Don't have an account? <u><a href="/users">Register</a></p></u>
+
+            <a href="/users/verifyMail" class="forgot-password">
+                <i class="fas fa-question-circle" style="margin-right: 0.3rem;"></i>Forgot Password?
+            </a>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Login
+            </button>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="/users">Create one here</a></p>
             </div>
+
+            <a href="/articles" class="btn btn-cancel" style="width: 100%; text-align: center; text-decoration: none; display: block;">
+                <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>Back to Home
+            </a>
         </form>
     </div>
-    <div class="col-lg-3"></div>
 </div>
