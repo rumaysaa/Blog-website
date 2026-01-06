@@ -41,12 +41,12 @@ const connectionString = 'mongodb+srv://theblog:'+process.env.DB_PASS+'@cluster0
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     store: MongoStore.create({
-        mongoUrl: connectionString//,
-        //mongoOptions: advancedOptions // See below for details
+        mongoUrl: connectionString
       }
     ),
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 7 }
 }))
 
 app.use(function (req, res, next) {

@@ -123,10 +123,16 @@ router.post('/login', async (req, res) => {
         if (comparePass) {
             if (foundUser.active) {
                 req.session.user = foundUser
-                if (req.body.url)
-                    res.redirect(req.body.url+ "?id=" + req.body.articleID)
-                else
-                    res.redirect('/articles')
+                req.session.save((err) => {
+                    if (err) {
+                        console.error('Error saving session:', err)
+                        return res.status(500).send('Error during login')
+                    }
+                    if (req.body.url)
+                        res.redirect(req.body.url+ "?id=" + req.body.articleID)
+                    else
+                        res.redirect('/articles')
+                })
             }
             else {
                 res.redirect('/users/login?activateMsg=Your Account is not activated.Kindly Check your mail to Activate.')
