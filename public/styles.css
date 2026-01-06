@@ -429,9 +429,102 @@ textarea:focus {
     padding: 0 1rem;
 }
 
-@media (max-width: 768px) {
+/* ===== TOUCH-FRIENDLY IMPROVEMENTS ===== */
+
+/* Ensure buttons and clickable elements are at least 44x44px (mobile accessibility) */
+button, a.btn, .btn-custom, input[type=button], input[type=submit] {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Improve form input touch targets */
+input, textarea, select, .form-control, .form-select {
+    min-height: 44px;
+}
+
+/* Prevent text zoom on input focus (iOS) */
+input, textarea, select {
+    font-size: 16px !important;
+}
+
+/* Smooth scrolling for better UX */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Ensure images are responsive */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Responsive tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Improve readability on all screens */
+@supports (display: grid) {
     .article-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Large Screens (Desktop - > 1200px) */
+/* Extra Large Screens (> 1920px) */
+@media (min-width: 1920px) {
+    .main-container {
+        padding: 0 4rem;
+    }
+    
+    .form-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .article-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Large Screens (Desktop - 1200px - 1919px) */
+@media (min-width: 1200px) and (max-width: 1919px) {
+    .main-container {
+        padding: 0 2rem;
+    }
+    
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+    }
+    
+    .article-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablets & Medium Devices (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .navbar-custom .navbar-brand {
+        font-size: 1.5rem;
+    }
+    
+    .navbar-custom .nav-link {
+        font-size: 0.9rem;
+        margin: 0 5px;
+    }
+    
+    .article-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
     
     .page-title {
@@ -439,11 +532,333 @@ textarea:focus {
     }
     
     .article-header h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
+    }
+    
+    .form-container {
+        padding: 2rem;
+    }
+    
+    .form-container h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Small Tablets & Large Phones (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .navbar-custom {
+        padding: 0.8rem 0;
+    }
+    
+    .navbar-custom .navbar-brand {
+        font-size: 1.3rem;
+    }
+    
+    .navbar-custom .nav-link {
+        font-size: 0.85rem;
+        margin: 0 4px;
+        padding: 0.5rem 0.25rem !important;
+    }
+    
+    .navbar-toggler {
+        padding: 0.3rem;
+    }
+    
+    .article-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .article-card-image {
+        height: 180px;
+        font-size: 2.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.7rem;
+        margin: 1.5rem 0 1rem 0;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .article-header h1 {
+        font-size: 1.5rem;
     }
     
     .form-container {
         padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .form-container h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    input[type=text],
+    input[type=password],
+    input[type=email],
+    textarea,
+    select {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .article-card-meta {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .article-category {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+    }
+    
+    .comment-item {
+        padding: 1rem;
+    }
+    
+    .btn-custom,
+    .btn-submit {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .article-body {
+        padding: 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Mobile Phones (< 576px) */
+@media (max-width: 575px) {
+    .navbar-custom {
+        padding: 0.7rem 0;
+    }
+    
+    .navbar-custom .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .navbar-custom .nav-link {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.2rem !important;
+        margin: 0 2px;
+    }
+    
+    .navbar-toggler {
+        padding: 0.25rem;
+    }
+    
+    .nav-item {
+        padding: 0.25rem 0;
+    }
+    
+    .article-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .article-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    
+    .article-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .article-card-image {
+        height: 150px;
+        font-size: 2rem;
+    }
+    
+    .article-card-body {
+        padding: 1rem;
+    }
+    
+    .article-card-title {
+        font-size: 1.1rem;
+        min-height: 2.5rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .article-card-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+    }
+    
+    .article-category {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .article-card-link {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        margin-top: 0.8rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+        margin: 1rem 0 0.8rem 0;
+    }
+    
+    .page-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+    
+    .article-header h1 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .article-body {
+        padding: 1rem;
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+    
+    .form-container {
+        padding: 1.2rem;
+        margin: 0.5rem;
+        border-radius: 10px;
+    }
+    
+    .form-container h2,
+    .form-container h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    input[type=text],
+    input[type=password],
+    input[type=email],
+    input[type=file],
+    textarea,
+    select,
+    .form-control,
+    .form-select {
+        padding: 0.6rem 0.7rem;
+        font-size: 0.9rem;
+        margin: 0.6rem 0;
+        border-radius: 5px;
+    }
+    
+    .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-submit,
+    .btn-primary,
+    .btn {
+        width: 100%;
+        padding: 0.7rem;
+        font-size: 0.9rem;
+        border-radius: 5px;
+    }
+    
+    .btn-custom {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .btn-cancel {
+        width: 100%;
+    }
+    
+    .checkbox-custom {
+        font-size: 0.9rem;
+    }
+    
+    .comment-item {
+        padding: 1rem;
+        margin-bottom: 0.8rem;
+        border-radius: 6px;
+    }
+    
+    .comment-author {
+        font-size: 0.95rem;
+    }
+    
+    .comment-text {
+        font-size: 0.9rem;
+    }
+    
+    .comment-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .comment-section {
+        margin: 1.5rem 0;
+    }
+    
+    .pb-cmnt-textarea {
+        min-height: 80px;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-footer {
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .form-footer p {
+        font-size: 0.85rem;
+    }
+    
+    .forgot-password {
+        font-size: 0.85rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .alert,
+    .alert-custom,
+    .alert-info,
+    .alert-danger {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    small {
+        font-size: 0.75rem;
+    }
+    
+    .main-container {
+        padding: 0 0.75rem;
+        margin-top: 80px;
+    }
+    
+    .navbar-custom {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1030;
+    }
+    
+    .container {
+        padding: 0 0.5rem;
+    }
+    
+    .container-fluid {
+        padding: 0;
     }
 }
 
