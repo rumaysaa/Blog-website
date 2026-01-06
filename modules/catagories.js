@@ -1,5 +1,4 @@
 const Model = require('../models/Catagories')
-const { search } = require('../routers/users')
 
 
 async function getCatagories(){
