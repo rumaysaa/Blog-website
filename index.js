@@ -39,7 +39,7 @@ const connectionString = 'mongodb+srv://theblog:'+process.env.DB_PASS+'@cluster0
 
 
 app.use(session({
-    secret: 'Your_Secret_Key',
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     store: MongoStore.create({
         mongoUrl: connectionString//,
         //mongoOptions: advancedOptions // See below for details
@@ -51,6 +51,7 @@ app.use(session({
 
 app.use(function (req, res, next) {
     res.locals.session = req.session;
+    res.locals.baseUrl = process.env.BASE_URL || `http://${req.get('host')}`;
     next();
 });
 
@@ -58,6 +59,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/catagories', catagoriesRouter)
 app.use('/articles', addArticleRouter)
 app.use('/comments', commentsRouter)
