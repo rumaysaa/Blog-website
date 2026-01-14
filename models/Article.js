@@ -6,7 +6,11 @@ const Article = mongoose.model('article' , new mongoose.Schema(
         userID : {type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
         heading : String,
         description : String,
-        coverPhoto : String
+        coverPhoto : String,
+        tags: [String],
+        likes: { type: Number, default: 0 },
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: Date.now }
     }
 ))
 

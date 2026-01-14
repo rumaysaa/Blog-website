@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <h1 class="page-title"><i class="fas fa-bookmark" style="margin-right: 0.8rem; color: var(--secondary-color);"></i>My Bookmarks</h1>
+    <p class="page-subtitle">Articles you've saved for later</p>
+    
+    {{#if data.bookmarks}}
+    <div class="article-grid">
+        {{#each data.bookmarks}}
+        <div class="article-card">
+            <div class="article-card-image">
+                {{#if articleID.coverPhoto}}
+                <img src="/uploads/{{articleID.coverPhoto}}" alt="{{articleID.heading}}" style="width: 100%; height: 100%; object-fit: cover;">
+                {{else}}
+                <i class="fas fa-image"></i>
+                {{/if}}
+            </div>
+            <div class="article-card-body">
+                <h5 class="article-card-title">{{articleID.heading}}</h5>
+                <div class="article-card-meta">
+                    {{#if articleID.categoryID}}
+                    <span class="article-category">{{articleID.categoryID.catName}}</span>
+                    {{else}}
+                    <span class="article-category">Uncategorized</span>
+                    {{/if}}
+                    <span class="article-author">
+                        {{#if articleID.userID}}
+                        {{articleID.userID.name}}
+                        {{else}}
+                        Anonymous
+                        {{/if}}
+                    </span>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <a href="/comments?id={{articleID._id}}" class="article-card-link" style="flex: 1; text-align: center; margin: 0;">
+                        <i class="fas fa-arrow-right" style="margin-right: 0.3rem;"></i>Read
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="alert alert-info text-center" style="margin-top: 2rem;">
+        <h5><i class="fas fa-bookmark" style="margin-right: 0.5rem;"></i>No bookmarks yet</h5>
+        <p>Start bookmarking articles to save them for later!</p>
+        <a href="/articles" class="btn btn-primary">Explore Articles</a>
+    </div>
+    {{/if}}
+</div>

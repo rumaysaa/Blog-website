@@ -14,4 +14,8 @@ async function removeCommentById(id){
     return await Model.Comments.findByIdAndDelete(id)
 }
 
-module.exports = {getArticleById, addComment,removeCommentById}
+async function countCommentsByArticleId(id){
+    return await Model.Comments.countDocuments({articleID: id})
+}
+
+module.exports = {getArticleById, addComment,removeCommentById, countCommentsByArticleId}

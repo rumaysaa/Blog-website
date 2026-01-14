@@ -32,6 +32,9 @@ router.get('/', async (req, res) => {
         }))
         
         let imageBase64=""
+        let isLiked = false
+        let isBookmarked = false
+        
         if (req.session.user) {
             if(req.session.user.profilePhoto){
                 const img = await users.findUserById(req.session.user._id)
@@ -39,9 +42,18 @@ router.get('/', async (req, res) => {
                     imageBase64 = img.profilePhoto.toString('base64')
                 }
             }
+            
+            const likes = require('../modules/likes')
+            const bookmarks = require('../modules/bookmarks')
+            
+            const userLike = await likes.checkLike(id, req.session.user._id)
+            isLiked = !!userLike
+            
+            const userBookmark = await bookmarks.checkBookmark(id, req.session.user._id)
+            isBookmarked = !!userBookmark
         }
 
-        const data = { Article, com: allComments, imageBase64 }
+        const data = { Article, com: allComments, imageBase64, isLiked, isBookmarked }
         res.render('readArticle', { data })
     } catch(err) {
         console.error('Error loading comments:', err)

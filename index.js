@@ -11,6 +11,8 @@ const catagoriesRouter = require('./routers/catagories')
 const addArticleRouter = require('./routers/article')
 const commentsRouter = require('./routers/comments')
 const usersRouter = require('./routers/users')
+const likesRouter = require('./routers/likes')
+const bookmarksRouter = require('./routers/bookmarks')
 
 var hbs = exphbs.create({
     helpers: {
@@ -26,6 +28,21 @@ var hbs = exphbs.create({
             if (!(arg1 && arg2)) return ""
             return arg1.toString() === arg2.toString() ? " selected " : ""
         },
+        includes: function (array, value) {
+            if (!array) return false
+            return array.some(item => item.toString() === value.toString())
+        },
+        formatDate: function (date) {
+            if (!date) return ""
+            const d = new Date(date)
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
+        },
+        truncate: function (text, limit) {
+            if (!text) return ""
+            if (text.length <= limit) return text
+            return text.substring(0, limit).trim() + '...'
+        }
     },
     defaultLayout: 'main',
     extname: '.hbs'
@@ -64,6 +81,8 @@ app.use('/catagories', catagoriesRouter)
 app.use('/articles', addArticleRouter)
 app.use('/comments', commentsRouter)
 app.use('/users', usersRouter)
+app.use('/likes', likesRouter)
+app.use('/bookmarks', bookmarksRouter)
 
 
 

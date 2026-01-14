@@ -7,7 +7,9 @@ const Users = mongoose.model('Users', new mongoose.Schema(
         password : String,
         active: { type: Boolean, default: false},
         code: String,
-        profilePhoto: Buffer
+        profilePhoto: Buffer,
+        interestCategories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'catagories' }],
+        createdAt: { type: Date, default: Date.now }
     }
 ))
 

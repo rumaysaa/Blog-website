@@ -12,6 +12,31 @@
 
     <article class="article-header">
         <h1>{{data.Article.heading}}</h1>
+        
+        {{#if data.Article.tags}}
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">
+            {{#each data.Article.tags}}
+            <span style="display: inline-block; background-color: var(--secondary-color); color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">
+                <i class="fas fa-tag" style="margin-right: 0.3rem;"></i>{{this}}
+            </span>
+            {{/each}}
+        </div>
+        {{/if}}
+        
+        <div class="article-read-actions" style="display: flex; gap: 1rem; margin-top: 1.5rem; align-items: center; flex-wrap: wrap;">
+            <span style="color: #7f8c8d; font-size: 0.95rem;">
+                <i class="fas fa-heart" style="color: var(--accent-color); margin-right: 0.3rem;"></i>
+                <span id="likeCount">{{data.Article.likes}}</span> likes
+            </span>
+            {{#if session.user}}
+            <button id="likeBtn" class="action-btn like-btn-read" data-article-id="{{data.Article._id}}" {{#if data.isLiked}}data-liked="true"{{/if}} style="padding: 0.5rem 1rem;">
+                <i class="{{#if data.isLiked}}fas{{else}}far{{/if}} fa-heart"></i> Like
+            </button>
+            <button id="bookmarkBtn" class="action-btn bookmark-btn-read" data-article-id="{{data.Article._id}}" {{#if data.isBookmarked}}data-bookmarked="true"{{/if}} style="padding: 0.5rem 1rem;">
+                <i class="{{#if data.isBookmarked}}fas{{else}}far{{/if}} fa-bookmark"></i> Save
+            </button>
+            {{/if}}
+        </div>
     </article>
 
     {{#if data.Article.coverPhoto}}
@@ -24,29 +49,29 @@
         {{data.Article.description}}
     </div>
 
-    <div class="comment-section" style="margin-top: 3rem; margin-bottom: 3rem;">
-        <hr>
+    <div class="comment-section" style="margin-top: 2.5rem; margin-bottom: 3rem;">
+        <hr style="margin-bottom: 1.5rem;">
         
         {{#if session.user}}
-        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); margin-bottom: 2rem;">
-            <h5 style="margin-bottom: 1.5rem; color: var(--primary-color); font-weight: 700;">
-                <i class="fas fa-comment" style="margin-right: 0.5rem;"></i>Add Your Comment
+        <div style="background: white; padding: 1.25rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); margin-bottom: 1.5rem;">
+            <h5 style="margin-bottom: 1rem; color: var(--primary-color); font-weight: 700; font-size: 1rem;">
+                <i class="fas fa-comment" style="margin-right: 0.5rem;"></i>Add Comment
             </h5>
             
             <form action="/comments?id={{data.Article._id}}" method="POST">
                 <input type="hidden" value="{{data.Article._id}}" name="articleID">
                 <input type="hidden" value="{{session.user._id}}" name="userID">
 
-                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 0.8rem;">
                     <div>
                         {{#if data.imageBase64}}
-                        <img src="data:image/png;base64,{{data.imageBase64}}" class="comment-avatar" alt="Profile Photo">
+                        <img src="data:image/png;base64,{{data.imageBase64}}" class="comment-avatar" alt="Profile Photo" style="width: 36px; height: 36px;">
                         {{else}}
-                        <img src="/Deafult-Profile-Pitcher.png" class="comment-avatar" alt="Profile Photo">
+                        <img src="/Deafult-Profile-Pitcher.png" class="comment-avatar" alt="Profile Photo" style="width: 36px; height: 36px;">
                         {{/if}}
                     </div>
                     <div style="flex: 1;">
-                        <p style="color: var(--primary-color); font-weight: 700; margin: 0;">{{session.user.name}}</p>
+                        <p style="color: var(--primary-color); font-weight: 600; margin: 0; font-size: 0.95rem;">{{session.user.name}}</p>
                     </div>
                 </div>
 
@@ -55,10 +80,11 @@
                     id="comment" 
                     name="comment" 
                     placeholder="Share your thoughts..." 
+                    style="height: 80px; padding: 0.6rem; font-size: 0.9rem;"
                     required></textarea>
 
-                <button type="submit" class="btn-submit" style="margin-top: 1rem; width: auto; padding: 0.6rem 2rem;">
-                    <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>Post Comment
+                <button type="submit" class="btn-submit" style="margin-top: 0.6rem; width: auto; padding: 0.5rem 1.2rem; font-size: 0.95rem;">
+                    <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>Post
                 </button>
             </form>
         </div>
@@ -70,36 +96,35 @@
         {{/if}}
 
         {{#if data.com}}
-        <h4 style="margin-top: 3rem; margin-bottom: 2rem; color: var(--primary-color); font-weight: 700;">
+        <h4 style="margin-top: 1.5rem; margin-bottom: 1.2rem; color: var(--primary-color); font-weight: 700; font-size: 1rem;">
             <i class="fas fa-comments" style="margin-right: 0.5rem;"></i>Comments ({{data.com.length}})
         </h4>
 
         {{#each data.com}}
-        <div class="comment-item">
-            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+        <div class="comment-item" style="margin-bottom: 1rem;">
+            <div style="display: flex; align-items: flex-start; gap: 0.8rem;">
                 <div>
                     {{#if imageBase64}}
-                    <img src="data:image/png;base64,{{imageBase64}}" class="comment-avatar" alt="Profile Photo">
+                    <img src="data:image/png;base64,{{imageBase64}}" class="comment-avatar" alt="Profile Photo" style="width: 32px; height: 32px;">
                     {{else}}
-                    <img src="/Deafult-Profile-Pitcher.png" class="comment-avatar" alt="Profile Photo">
+                    <img src="/Deafult-Profile-Pitcher.png" class="comment-avatar" alt="Profile Photo" style="width: 32px; height: 32px;">
                     {{/if}}
                 </div>
                 <div style="flex: 1;">
-                    <div class="comment-author">
-                        {{userID.name}}
+                    <div style="margin-bottom: 0.2rem;">
+                        <span style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem;">{{userID.name}}</span>
+                        <small style="color: #95a5a6; font-size: 0.8rem; margin-left: 0.5rem;"><i class="fas fa-clock"></i> {{time}}</small>
                     </div>
-                    <div class="comment-text">
+                    <div style="color: #2c3e50; font-size: 0.9rem; margin-bottom: 0.3rem;">
                         {{comment}}
                     </div>
-                    <small style="color: #95a5a6;">
-                        <i class="fas fa-clock"></i> {{time}}
-                    </small>
                 </div>
                 {{#ifEquals userID._id @root.session.user._id}}
                 <div>
                     <a href="/comments/delete?id={{_id}}&articleID={{articleID}}" 
                        class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Delete this comment?')">
+                       onclick="return confirm('Delete this comment?')"
+                       style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
                         <i class="fas fa-trash-alt"></i>
                     </a>
                 </div>
@@ -115,3 +140,83 @@
         {{/if}}
     </div>
 </div>
+
+<script>
+const likeBtn = document.getElementById('likeBtn');
+const bookmarkBtn = document.getElementById('bookmarkBtn');
+
+function showFeedback(message, type = 'info') {
+    const feedback = document.createElement('div');
+    feedback.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background-color: ${type === 'success' ? '#27ae60' : '#3498db'};
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    `;
+    feedback.textContent = message;
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => feedback.remove(), 300);
+    }, 2000);
+}
+
+if(likeBtn) {
+    likeBtn.addEventListener('click', async function() {
+        const articleId = this.getAttribute('data-article-id');
+        try {
+            const response = await fetch('/likes/toggle', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({articleID: articleId})
+            });
+            const data = await response.json();
+            if(data.success) {
+                this.setAttribute('data-liked', data.liked);
+                this.innerHTML = `<i class="${data.liked ? 'fas' : 'far'} fa-heart"></i> Like`;
+                const likeCountEl = document.getElementById('likeCount');
+                const newCount = parseInt(likeCountEl.textContent) + (data.liked ? 1 : -1);
+                likeCountEl.textContent = newCount;
+                showFeedback(data.liked ? '❤️ Liked!' : 'Unlike', 'success');
+            } else {
+                alert(data.message);
+            }
+        } catch(err) {
+            console.error('Error:', err);
+        }
+    });
+}
+
+if(bookmarkBtn) {
+    bookmarkBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const articleId = this.getAttribute('data-article-id');
+        try {
+            const response = await fetch('/bookmarks/toggle', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({articleID: articleId})
+            });
+            const data = await response.json();
+            if(data.success) {
+                this.setAttribute('data-bookmarked', data.bookmarked);
+                this.querySelector('i').classList.toggle('fas');
+                this.querySelector('i').classList.toggle('far');
+                showFeedback(data.bookmarked ? '🔖 Saved!' : 'Unsaved', 'success');
+            } else {
+                alert(data.message);
+            }
+        } catch(err) {
+            console.error('Error:', err);
+        }
+    });
+}
+</script>

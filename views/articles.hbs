@@ -1,49 +1,233 @@
-<div class="container-fluid">
-    <h1 class="page-title">Latest Articles</h1>
-    <p class="page-subtitle">Discover amazing stories and insights from our community</p>
-    
-    {{#if data.list}}
-    <div class="article-grid">
-        {{#each data.list}}
-        <div class="article-card">
-            <div class="article-card-image">
-                {{#if coverPhoto}}
-                <img src="/uploads/{{coverPhoto}}" alt="{{heading}}" style="width: 100%; height: 100%; object-fit: cover;">
-                {{else}}
-                <i class="fas fa-image"></i>
-                {{/if}}
-            </div>
-            <div class="article-card-body">
-                <h5 class="article-card-title">{{heading}}</h5>
-                <div class="article-card-meta">
-                    {{#if categoryID}}
-                    <span class="article-category">{{categoryID.catName}}</span>
-                    {{else}}
-                    <span class="article-category">Uncategorized</span>
-                    {{/if}}
-                    <span class="article-author">
-                        {{#if userID}}
-                            {{#ifEquals userID._id @root.session.user._id}}
-                            <i class="fas fa-user-check" style="margin-right: 0.3rem;"></i>
-                            {{/ifEquals}}
-                            {{userID.name}}
-                        {{else}}
-                        Anonymous
-                        {{/if}}
-                    </span>
-                </div>
-                <a href="/comments?id={{_id}}" class="article-card-link">
-                    <i class="fas fa-arrow-right" style="margin-right: 0.5rem;"></i>Read Article
-                </a>
+<div class="container-fluid homepage">
+    <div class="homepage-header">
+        <div class="header-left">
+            {{#if session.user}}
+            {{#if data.recommendations}}
+            <h2 class="section-title">
+                <i class="fas fa-heart" style="color: var(--accent-color); margin-right: 0.5rem;"></i>For You
+            </h2>
+            {{else}}
+            <h2 class="section-title">
+                <i class="fas fa-fire" style="color: var(--secondary-color); margin-right: 0.5rem;"></i>Discover
+            </h2>
+            {{/if}}
+            {{else}}
+            <h2 class="section-title">
+                <i class="fas fa-fire" style="color: var(--secondary-color); margin-right: 0.5rem;"></i>Discover
+            </h2>
+            {{/if}}
+        </div>
+        <div class="header-right">
+            <div class="search-bar-container">
+                <i class="fas fa-search search-icon-header"></i>
+                <input type="text" id="searchInput" class="search-bar-header" placeholder="Search articles...">
             </div>
         </div>
-        {{/each}}
     </div>
-    {{else}}
-    <div class="alert alert-info text-center" style="margin-top: 2rem;">
-        <h5>No articles yet</h5>
-        <p>Be the first to write an article!</p>
-        <a href="/articles/form" class="btn btn-primary">Write Article</a>
-    </div>
+
+    {{#if session.user}}
+    {{#if data.recommendations}}
+    <section class="carousel-section" id="forYouSection">
+        <div class="articles-carousel" id="forYouGrid">
+            {{#each data.recommendations}}
+            <a href="/comments?id={{_id}}" class="carousel-card article-card carousel-item" data-title="{{heading}}" data-category="{{#if categoryID}}{{categoryID.catName}}{{/if}}" style="text-decoration: none; color: inherit;">
+                <div class="article-card-image">
+                    {{#if coverPhoto}}
+                    <img src="/uploads/{{coverPhoto}}" alt="{{heading}}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {{else}}
+                    <i class="fas fa-image"></i>
+                    {{/if}}
+                </div>
+                <div class="article-card-body">
+                    <div class="card-top-meta">
+                        {{#if categoryID}}
+                        <span class="article-category">{{categoryID.catName}}</span>
+                        {{else}}
+                        <span class="article-category">Uncategorized</span>
+                        {{/if}}
+                    </div>
+                    <h5 class="article-card-title">{{heading}}</h5>
+                    {{#if description}}
+                    <div class="article-preview">
+                        {{#truncate description 100}}{{/truncate}}
+                    </div>
+                    {{/if}}
+                    <div class="card-author-date">
+                        <span class="author-info">
+                            <i class="fas fa-user" style="font-size: 0.75rem; margin-right: 0.25rem;"></i>
+                            {{#if userID}}{{userID.name}}{{else}}Anonymous{{/if}}
+                        </span>
+                        <span class="author-date" style="color: #95a5a6; font-size: 0.8rem;">
+                            <i class="fas fa-calendar-alt" style="font-size: 0.7rem; margin-right: 0.25rem;"></i>
+                            {{#formatDate createdAt}}{{/formatDate}}
+                        </span>
+                    </div>
+                    <div class="article-card-footer">
+                        <div class="article-stats-full">
+                            <span class="stat-item-full">
+                                <i class="fas fa-heart" style="color: var(--accent-color);"></i>
+                                <span>{{likes}}</span>
+                            </span>
+                            <span class="stat-item-full">
+                                <i class="fas fa-comment"></i>
+                                <span>{{commentCount}}</span>
+                            </span>
+                            <span class="stat-item-full">
+                                <i class="fas fa-bookmark"></i>
+                                <span>{{bookmarkCount}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </section>
     {{/if}}
+    {{/if}}
+
+    <section class="discover-section" id="discoverSection">
+        {{#if data.recentArticles}}
+        <div class="articles-grid" id="articlesContainer">
+            {{#each data.recentArticles}}
+            <a href="/comments?id={{_id}}" class="article-card carousel-item" data-title="{{heading}}" data-category="{{#if categoryID}}{{categoryID.catName}}{{/if}}" style="text-decoration: none; color: inherit;">
+                <div class="article-card-image">
+                    {{#if coverPhoto}}
+                    <img src="/uploads/{{coverPhoto}}" alt="{{heading}}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {{else}}
+                    <i class="fas fa-image"></i>
+                    {{/if}}
+                </div>
+                <div class="article-card-body">
+                    <div class="card-top-meta">
+                        <span class="article-category">{{#if categoryID}}{{categoryID.catName}}{{else}}Uncategorized{{/if}}</span>
+                    </div>
+                    <h5 class="article-card-title">{{heading}}</h5>
+                    {{#if description}}
+                    <div class="article-preview">
+                        {{#truncate description 100}}{{/truncate}}
+                    </div>
+                    {{/if}}
+                    <div class="card-author-date">
+                        <span class="author-info">
+                            <i class="fas fa-user" style="font-size: 0.75rem; margin-right: 0.25rem;"></i>
+                            {{#if userID}}{{userID.name}}{{else}}Anonymous{{/if}}
+                        </span>
+                        <span class="author-date" style="color: #95a5a6; font-size: 0.8rem;">
+                            <i class="fas fa-calendar-alt" style="font-size: 0.7rem; margin-right: 0.25rem;"></i>
+                            {{#formatDate createdAt}}{{/formatDate}}
+                        </span>
+                    </div>
+                    <div class="article-card-footer">
+                        <div class="article-stats-full">
+                            <span class="stat-item-full">
+                                <i class="fas fa-heart" style="color: var(--accent-color);"></i>
+                                <span>{{likes}}</span>
+                            </span>
+                            <span class="stat-item-full">
+                                <i class="fas fa-comment"></i>
+                                <span>{{commentCount}}</span>
+                            </span>
+                            <span class="stat-item-full">
+                                <i class="fas fa-bookmark"></i>
+                                <span>{{bookmarkCount}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+        
+        {{#if data.recentArticles.length}}
+        <div class="show-more-container">
+            <button id="showMoreBtn" class="show-more-btn">
+                <i class="fas fa-plus" style="margin-right: 0.5rem;"></i>Show More
+            </button>
+        </div>
+        {{/if}}
+        {{else}}
+        <div class="alert alert-info text-center">
+            <h5><i class="fas fa-lightbulb"></i> Start Exploring</h5>
+            <p>Be the first to write an article!</p>
+            <a href="/articles/form" class="btn btn-primary">Write Article</a>
+        </div>
+        {{/if}}
+    </section>
 </div>
+
+<script>
+const searchInput = document.getElementById('searchInput');
+const allArticles = document.querySelectorAll('.carousel-item');
+const showMoreBtn = document.getElementById('showMoreBtn');
+const articlesGrid = document.getElementById('articlesContainer');
+const forYouSection = document.getElementById('forYouSection');
+const discoverSection = document.getElementById('discoverSection');
+
+function calculateItemsPerRow() {
+    if (!articlesGrid) return 3;
+    const gridStyle = window.getComputedStyle(articlesGrid);
+    const columns = gridStyle.gridTemplateColumns.split(' ').length;
+    return columns;
+}
+
+function updateShowMoreButton() {
+    if (!showMoreBtn || !articlesGrid) return;
+    
+    const items = articlesGrid.querySelectorAll('.carousel-item:not([style*="display: none"])');
+    const itemsPerRow = calculateItemsPerRow();
+    const minItemsForShowMore = itemsPerRow + 1;
+    
+    if (items.length > minItemsForShowMore) {
+        showMoreBtn.style.display = 'block';
+    } else {
+        showMoreBtn.style.display = 'none';
+    }
+}
+
+if(searchInput) {
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        let forYouVisibleCount = 0;
+        let discoverVisibleCount = 0;
+        
+        allArticles.forEach(item => {
+            const title = item.getAttribute('data-title').toLowerCase();
+            const category = item.getAttribute('data-category').toLowerCase();
+            const matches = title.includes(query) || category.includes(query);
+            item.style.display = matches ? '' : 'none';
+            
+            if (matches) {
+                if (item.closest('#forYouGrid')) {
+                    forYouVisibleCount++;
+                } else {
+                    discoverVisibleCount++;
+                }
+            }
+        });
+        
+        if (query.length > 0) {
+            if (forYouSection) forYouSection.style.display = forYouVisibleCount > 0 ? 'block' : 'none';
+            if (discoverSection) discoverSection.style.display = discoverVisibleCount > 0 ? 'block' : 'none';
+            if (showMoreBtn) showMoreBtn.style.display = 'none';
+        } else {
+            if (forYouSection) forYouSection.style.display = '';
+            if (discoverSection) discoverSection.style.display = '';
+            updateShowMoreButton();
+        }
+    });
+}
+
+if(showMoreBtn) {
+    showMoreBtn.addEventListener('click', function() {
+        const items = articlesGrid.querySelectorAll('.carousel-item');
+        items.forEach(item => {
+            item.style.display = '';
+        });
+        showMoreBtn.style.display = 'none';
+    });
+}
+
+window.addEventListener('load', updateShowMoreButton);
+window.addEventListener('resize', updateShowMoreButton);
+</script>

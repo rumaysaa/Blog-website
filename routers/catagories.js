@@ -35,6 +35,27 @@ router.post('/' , async (req,res) => {
     }
 })
 
+router.post('/add-quick', async (req, res) => {
+    try {
+        if (!req.body.catName || !req.body.catName.trim()) {
+            return res.status(400).json({success: false, message: 'Category name required'})
+        }
+        
+        const catName = req.body.catName.trim()
+        const existingCat = await catagories.searchCat(catName)
+        
+        if (existingCat) {
+            return res.status(400).json({success: false, message: 'Category already exists'})
+        }
+        
+        const newCat = await catagories.addCatagory({catName})
+        res.json({success: true, category: newCat})
+    } catch(err) {
+        console.error('Error adding category:', err)
+        res.status(500).json({success: false, message: 'Error adding category'})
+    }
+})
+
 
 
 module.exports = router

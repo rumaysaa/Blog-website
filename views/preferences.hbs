@@ -1,0 +1,40 @@
+<div class="container" style="max-width: 600px; margin: 4rem auto;">
+    <div class="form-container">
+        <h2><i class="fas fa-heart" style="margin-right: 0.8rem; color: var(--secondary-color);"></i>Select Your Interests</h2>
+        <p style="text-align: center; color: #7f8c8d; margin-bottom: 2rem;">Help us personalize your experience by selecting topics you're interested in. You can change these later in your profile.</p>
+        
+        <form action="/users/preferences" method="POST">
+            <input type="hidden" name="id" value="{{id}}">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                {{#each cats}}
+                <div class="preference-checkbox">
+                    <label style="display: flex; align-items: center; padding: 1rem; background: var(--light-bg); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent;">
+                        <input 
+                            type="checkbox" 
+                            name="categories" 
+                            value="{{_id}}" 
+                            style="width: auto; margin-right: 0.8rem; cursor: pointer; accent-color: var(--secondary-color);">
+                        <span style="color: var(--primary-color); font-weight: 500;">{{catName}}</span>
+                    </label>
+                </div>
+                {{/each}}
+            </div>
+
+            <button type="submit" class="btn-submit" style="margin-top: 2rem;">
+                <i class="fas fa-check" style="margin-right: 0.5rem;"></i>Continue
+            </button>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="/users/login?msg=Account activated! Login to continue" style="color: var(--secondary-color); text-decoration: none; font-weight: 600;">Skip for now</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.preference-checkbox label:has(input:checked) {
+    background: rgba(52, 152, 219, 0.1);
+    border-color: var(--secondary-color);
+}
+</style>

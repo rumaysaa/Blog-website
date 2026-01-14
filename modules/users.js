@@ -35,4 +35,12 @@ async function updateProfilePhoto(data,id){
     return await Model.Users.findByIdAndUpdate(id, {profilePhoto: data})
 }
 
-module.exports = {createUser, updateUser,findUserById,updatePassword, activate, findUserByMail,updateUserCode,updateProfilePhoto}
+async function updateInterestCategories(id, categories){
+    return await Model.Users.findByIdAndUpdate(id, {interestCategories: categories})
+}
+
+async function getUserWithCategories(id){
+    return await Model.Users.findById(id).populate('interestCategories', '-__v').lean()
+}
+
+module.exports = {createUser, updateUser,findUserById,updatePassword, activate, findUserByMail,updateUserCode,updateProfilePhoto, updateInterestCategories, getUserWithCategories}

@@ -86,12 +86,39 @@ router.post('/', async (req, res) => {
 })
 router.get('/activate', async (req, res) => {
     try {
-        const msg="Succesfully Activated Your Account. Login to Continue"
         await users.activate(req.query.id)
-        res.redirect('/users/login?msg='+msg)
+        res.redirect('/users/preferences?id='+req.query.id)
     } catch(err) {
         console.error('Error activating account:', err)
         res.status(500).send('Error activating account')
+    }
+})
+
+router.get('/preferences', async (req, res) => {
+    try {
+        const catagories = require('../modules/catagories')
+        const cats = await catagories.getCatagories()
+        const id = req.query.id
+        res.render('preferences', {cats, id})
+    } catch(err) {
+        console.error('Error loading preferences:', err)
+        res.status(500).send('Error loading preferences')
+    }
+})
+
+router.post('/preferences', async (req, res) => {
+    try {
+        const id = req.body.id
+        let categories = req.body.categories
+        if(!categories) categories = []
+        if(typeof categories === 'string') categories = [categories]
+        
+        await users.updateInterestCategories(id, categories)
+        const msg = "Preferences Saved! Login to Continue"
+        res.redirect('/users/login?msg='+msg)
+    } catch(err) {
+        console.error('Error saving preferences:', err)
+        res.status(500).send('Error saving preferences')
     }
 })
 
