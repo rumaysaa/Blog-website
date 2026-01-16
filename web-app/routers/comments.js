@@ -24,9 +24,10 @@ router.get('/', async (req, res) => {
         const id = req.query.id
         const Article = await article.getArticleById(id)
         const com = await comments.getArticleById(id)
-        
-        await userReads.addRead(req.session.user._id, id)
 
+        if(req.session.user){
+        await userReads.addRead(req.session.user._id, id)
+        }
         const allComments = await Promise.all(com.map(async data => {
             if (data.userID && data.userID.profilePhoto) {
                 data.imageBase64 = data.userID.profilePhoto.toString('base64')

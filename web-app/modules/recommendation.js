@@ -2,7 +2,7 @@ const axios = require('axios')
 const ArticleModel = require('../models/Article')
 const LikeModel = require('../models/Likes')
 const BookmarkModel = require('../models/Bookmarks')
-const UserReadModel = require('../models/UserReads')
+const UserReadModel = require('../models/userReads')
 const UserModel = require('../models/Users')
 
 const ML_URL = 'http://localhost:8001/recommend'
