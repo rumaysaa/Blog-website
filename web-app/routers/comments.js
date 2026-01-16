@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
         const Article = await article.getArticleById(id)
         const com = await comments.getArticleById(id)
 
-        if(req.session.user){
+        if(req.session.user  && req.session.user._id){
         await userReads.addRead(req.session.user._id, id)
         }
         const allComments = await Promise.all(com.map(async data => {

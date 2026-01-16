@@ -200,7 +200,18 @@ router.get('/editUser', async (req, res) => {
         if(img && img.profilePhoto){
             imageBase64 = img.profilePhoto.toString('base64')
         }
-        res.render('editUser', { imageBase64,user })
+        
+        const catagories = require('../modules/catagories')
+        const allCategories = await catagories.getCatagories()
+        const userCategories = img.interestCategories || []
+        const userCategoryIds = userCategories.map(cat => cat._id ? cat._id.toString() : cat.toString())
+        
+        const categoriesWithSelected = allCategories.map(cat => ({
+            ...cat,
+            selected: userCategoryIds.includes(cat._id.toString())
+        }))
+        
+        res.render('editUser', { imageBase64, user, categories: categoriesWithSelected })
     } catch(err) {
         console.error('Error loading edit user:', err)
         res.status(500).send('Error loading user data')
@@ -218,6 +229,24 @@ router.post('/editUser', upload.single('image'), async (req, res) => {
     } catch(err) {
         console.error('Error updating user:', err)
         res.status(500).send('Error updating profile')
+    }
+})
+
+router.post('/updateCategories', async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect('/users/login?msg=Please login first')
+        }
+        const id = req.session.user._id
+        let categories = req.body.categories
+        if(!categories) categories = []
+        if(typeof categories === 'string') categories = [categories]
+        
+        await users.updateInterestCategories(id, categories)
+        res.redirect('/users/editUser?msg=Categories updated successfully')
+    } catch(err) {
+        console.error('Error updating categories:', err)
+        res.status(500).send('Error updating categories')
     }
 })
 

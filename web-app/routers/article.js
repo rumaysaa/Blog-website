@@ -5,7 +5,7 @@ const catagories = require('../modules/catagories')
 const comments = require('../modules/comments')
 const multer = require('multer')
 const path = require('path')
-
+const bookmarks = require('../modules/bookmarks')
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '../uploads'))
@@ -38,21 +38,12 @@ router.get('/' , async(req,res) => {
         let userBookmarks = []
         
         if(req.session.user && req.session.user._id) {
-            const users = require('../modules/users')
-            const userWithCats = await users.getUserWithCategories(req.session.user._id)
-            const likes = require('../modules/likes')
-            const bookmarks = require('../modules/bookmarks')
-            
-            if(userWithCats && userWithCats.interestCategories && userWithCats.interestCategories.length > 0) {
-                const categoryIds = userWithCats.interestCategories.map(cat => cat._id)
-                const Model = require('../models/Article')
-                recommendations = await Model.Article.find({categoryID: {$in: categoryIds}})
-                    .populate('categoryID','-_id -__v')
-                    .populate('userID','-mail -password -__v')
-                    .select('-__v -description')
-                    .sort({createdAt: -1})
-                    .limit(10)
-                    .lean()
+            try {
+                const recommendation = require('../modules/recommendation')
+                recommendations = await recommendation.getRecommendations(req.session.user._id)
+            } catch(recommendErr) {
+                console.log('Recommendation system error:', recommendErr.message)
+                recommendations = []
             }
             
             const { Likes: likeModel } = require('../models/Likes')
@@ -64,18 +55,26 @@ router.get('/' , async(req,res) => {
             userBookmarks = userBookmarksData.map(b => b.articleID.toString())
         }
         
-        const recentArticles = await article.getRecentArticles(10)
-        const bookmarks = require('../modules/bookmarks')
+        const recentArticles = await article.getRecentArticles(20)
+        const bookmarksModule = require('../modules/bookmarks')
         
-        const recentWithComments = await Promise.all(recentArticles.map(async (art) => {
+        // Get recommendation IDs to filter duplicates
+        const recommendationIds = recommendations.map(r => r._id.toString())
+        
+        // Filter out articles that are already in recommendations
+        const filteredRecentArticles = recentArticles.filter(art => 
+            !recommendationIds.includes(art._id.toString())
+        ).slice(0, 10)
+        
+        const recentWithComments = await Promise.all(filteredRecentArticles.map(async (art) => {
             const commentCount = await comments.countCommentsByArticleId(art._id)
-            const bookmarkCount = await bookmarks.countBookmarksByArticleId(art._id)
+            const bookmarkCount = await bookmarksModule.countBookmarksByArticleId(art._id)
             return {...art, commentCount, bookmarkCount}
         }))
         
         const recommendationsWithComments = await Promise.all(recommendations.map(async (art) => {
             const commentCount = await comments.countCommentsByArticleId(art._id)
-            const bookmarkCount = await bookmarks.countBookmarksByArticleId(art._id)
+            const bookmarkCount = await bookmarksModule.countBookmarksByArticleId(art._id)
             return {...art, commentCount, bookmarkCount}
         }))
         
@@ -96,7 +95,7 @@ router.get('/my-articles', async(req, res) => {
         const userArticles = await article.getArticles()
         const myArticles = userArticles.filter(art => art.userID && art.userID._id.toString() === req.session.user._id.toString())
         
-        const bookmarks = require('../modules/bookmarks')
+        
         const myArticlesWithComments = await Promise.all(myArticles.map(async (art) => {
             const commentCount = await comments.countCommentsByArticleId(art._id)
             const bookmarkCount = await bookmarks.countBookmarksByArticleId(art._id)
@@ -162,6 +161,26 @@ router.post('/add', (req, res, next) => {
     try {
         const articleData = req.body;
         
+        const heading = articleData.heading ? articleData.heading.trim() : '';
+        const description = articleData.description ? articleData.description.trim() : '';
+        const categoryID = articleData.categoryID ? articleData.categoryID.trim() : '';
+        
+        if (!heading) {
+            return res.redirect('/articles/form?msg=Article title is required');
+        }
+        
+        if (!description) {
+            return res.redirect('/articles/form?msg=Article content is required');
+        }
+        
+        if (!categoryID) {
+            return res.redirect('/articles/form?msg=Category is required');
+        }
+        
+        if (!req.file && !articleData.coverPhoto) {
+            return res.redirect('/articles/form?msg=Cover photo is required');
+        }
+        
         if (req.file) {
             console.log('File uploaded:', req.file.filename, 'Path:', req.file.path);
             articleData.coverPhoto = req.file.filename;
@@ -197,7 +216,55 @@ router.get('/delete' , async (req,res) => {
     }
 })
 
-
-
+router.get('/search', async(req, res) => {
+    try {
+        const query = req.query.q || ''
+        
+        if (!query.trim()) {
+            return res.render('searchResults', {searchResults: [], query: '', userLikes: [], userBookmarks: []})
+        }
+        
+        const searchRegex = new RegExp(query, 'i')
+        const Model = require('../models/Article')
+        
+        const searchResults = await Model.Article.find({
+            $or: [
+                {heading: {$regex: searchRegex}},
+                {description: {$regex: searchRegex}},
+                {tags: {$in: [searchRegex]}}
+            ]
+        })
+        .populate('categoryID', '-_id -__v')
+        .populate('userID', '-mail -password -__v')
+        .select('-__v')
+        .sort({createdAt: -1})
+        .lean()
+        
+        let userLikes = []
+        let userBookmarks = []
+        
+        if(req.session.user && req.session.user._id) {
+            const { Likes: likeModel } = require('../models/Likes')
+            const { Bookmarks: bookmarkModel } = require('../models/Bookmarks')
+            
+            const userLikesData = await likeModel.find({userID: req.session.user._id}).select('articleID').lean()
+            userLikes = userLikesData.map(l => l.articleID.toString())
+            
+            const userBookmarksData = await bookmarkModel.find({userID: req.session.user._id}).select('articleID').lean()
+            userBookmarks = userBookmarksData.map(b => b.articleID.toString())
+        }
+        
+        const searchResultsWithComments = await Promise.all(searchResults.map(async (art) => {
+            const commentCount = await comments.countCommentsByArticleId(art._id)
+            const bookmarkCount = await bookmarks.countBookmarksByArticleId(art._id)
+            return {...art, commentCount, bookmarkCount}
+        }))
+        
+        res.render('searchResults', {searchResults: searchResultsWithComments, query, userLikes, userBookmarks})
+    } catch(err) {
+        console.error('Error in search:', err)
+        res.status(500).send('Error searching articles')
+    }
+})
 
 module.exports = router

@@ -1,0 +1,205 @@
+<div class="container-fluid search-results-page">
+    <div class="search-header">
+        <div class="search-back-nav">
+            <a href="/articles" class="back-btn">
+                <i class="fas fa-arrow-left"></i>Back to Home
+            </a>
+        </div>
+        <div class="search-bar-container search-bar-header-large">
+            <i class="fas fa-search search-icon-header"></i>
+            <input type="text" id="searchInput" class="search-bar-header" placeholder="Search articles..." value="{{query}}">
+        </div>
+    </div>
+
+    <div class="search-results-container">
+        {{#if searchResults.length}}
+        <div class="search-results-header">
+            <h2 class="results-title">
+                <i class="fas fa-search"></i>Search Results
+            </h2>
+            <p class="results-count">Found {{searchResults.length}} article(s) for "{{query}}"</p>
+        </div>
+
+        <div class="articles-grid search-articles-grid">
+            {{#each searchResults}}
+            <a href="/comments?id={{_id}}" class="article-card search-result-card" style="text-decoration: none; color: inherit;">
+                <div class="article-card-image">
+                    {{#if coverPhoto}}
+                    <img src="/uploads/{{coverPhoto}}" alt="{{heading}}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {{else}}
+                    <i class="fas fa-image"></i>
+                    {{/if}}
+                </div>
+                <div class="article-card-body">
+                    <div class="card-top-meta">
+                        {{#if categoryID}}
+                        <span class="article-category">{{categoryID.catName}}</span>
+                        {{else}}
+                        <span class="article-category">Uncategorized</span>
+                        {{/if}}
+                    </div>
+                    <h5 class="article-card-title">{{heading}}</h5>
+                    {{#if description}}
+                    <div class="article-preview">
+                        {{#truncate description 100}}{{/truncate}}
+                    </div>
+                    {{/if}}
+                    <div class="card-author-date">
+                        <span class="author-info">
+                            <i class="fas fa-user" style="font-size: 0.75rem; margin-right: 0.25rem;"></i>
+                            {{#if userID}}{{userID.name}}{{else}}Anonymous{{/if}}
+                        </span>
+                        <span class="author-date" style="color: #95a5a6; font-size: 0.8rem;">
+                            <i class="fas fa-calendar-alt" style="font-size: 0.7rem; margin-right: 0.25rem;"></i>
+                            {{#formatDate createdAt}}{{/formatDate}}
+                        </span>
+                    </div>
+                    <div class="article-card-footer">
+                        <div class="article-stats-full">
+                            <span class="stat-item-full">
+                                <i class="fas fa-heart" style="color: var(--accent-color);"></i>
+                                <span>{{likes}}</span>
+                            </span>
+                            <span class="stat-item-full">
+                                <i class="fas fa-comment"></i>
+                                <span>{{commentCount}}</span>
+                            </span>
+                            <span class="stat-item-full">
+                                <i class="fas fa-bookmark"></i>
+                                <span>{{bookmarkCount}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="no-results-container">
+            <div class="no-results-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="no-results-title">No articles found</h3>
+            {{#if query}}
+            <p class="no-results-text">We couldn't find any articles matching "{{query}}"</p>
+            <p class="no-results-suggestion">Try searching with different keywords</p>
+            {{else}}
+            <p class="no-results-text">Enter a search term to find articles</p>
+            {{/if}}
+            <a href="/articles" class="btn btn-primary" style="margin-top: 1.5rem;">
+                <i class="fas fa-home"></i> Go to Home
+            </a>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<script>
+const searchInput = document.getElementById('searchInput');
+
+if (searchInput) {
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+                window.location.href = '/articles/search?q=' + encodeURIComponent(query);
+            }
+        }
+    });
+}
+</script>
+
+<style>
+.search-results-page {
+    padding-top: 100px;
+    min-height: 100vh;
+}
+
+.search-header {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.search-back-nav {
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #2980b9;
+    transform: translateX(-4px);
+}
+
+.search-bar-header-large {
+    margin: 0;
+}
+
+.search-results-container {
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.search-results-header {
+    margin-bottom: 2rem;
+}
+
+.results-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.results-count {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+.search-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.no-results-container {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.no-results-icon {
+    font-size: 3.5rem;
+    color: #bdc3c7;
+    margin-bottom: 1.5rem;
+}
+
+.no-results-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.no-results-text {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.no-results-suggestion {
+    color: #95a5a6;
+    font-size: 0.95rem;
+}
+</style>

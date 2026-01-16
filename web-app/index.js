@@ -7,13 +7,20 @@ const exphbs = require('express-handlebars')
 const session = require('express-session')
 const MongoStore = require('connect-mongo').default;
 
+require('./models/Catagories');
+require('./models/Article');
+require('./models/Likes');
+require('./models/Bookmarks');
+require('./models/userReads');
+require('./models/Users');
+
 const catagoriesRouter = require('./routers/catagories')
 const addArticleRouter = require('./routers/article')
 const commentsRouter = require('./routers/comments')
 const usersRouter = require('./routers/users')
 const likesRouter = require('./routers/likes')
 const bookmarksRouter = require('./routers/bookmarks')
-
+const recommendations = require('./routers/recommendation')
 var hbs = exphbs.create({
     helpers: {
         ifEquals: function (arg1, arg2, options) {
@@ -52,14 +59,14 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 const bodyParser = require('body-parser');
 
-const connectionString = 'mongodb+srv://theblog:'+process.env.DB_PASS+'@cluster0.9q0pw.mongodb.net/rblog?retryWrites=true&w=majority'
+const connectionString = 'mongodb+srv://theblog:' + process.env.DB_PASS + '@cluster0.9q0pw.mongodb.net/rblog?retryWrites=true&w=majority'
 
 
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     store: MongoStore.create({
         mongoUrl: connectionString
-      }
+    }
     ),
     resave: false,
     saveUninitialized: false,
@@ -83,46 +90,18 @@ app.use('/comments', commentsRouter)
 app.use('/users', usersRouter)
 app.use('/likes', likesRouter)
 app.use('/bookmarks', bookmarksRouter)
+app.use('/recommendations', recommendations)
 
 
 
 app.get("/", function (req, res) {
     res.redirect('/articles')
 })
-
-/*
-app.get("/session", function (req, res) {
-    return res.send(req.session.name)
-})
-*/
-
 const PORT = process.env.PORT;
-//console.log(connectionString)
 mongoose.connect(
     connectionString,
-    { useNewUrlParser: true, useUnifiedTopology: true,}
+    { useNewUrlParser: true, useUnifiedTopology: true, }
 )
     .then(val => console.log('Connected!!'))
 
 app.listen(PORT, console.log(`Welcome`))
-
-/*
-app.get('/', (req, res) => {
-    imgModel.find({}, (err, items) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('An error occurred', err);
-        }
-        else {
-            res.render('imagesPage', { items: items });
-        }
-    });
-});
-app.post('/image', upload.single('image'), async (req, res, next) => {
-    const data= fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename))
-    const filename = req.file.filename
-    console.log(data)
-    const a = await Images.findByIdAndUpdate(id ,{profilePhoto:data})
-    res.send(a)
-});
-*/
