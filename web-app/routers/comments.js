@@ -1,0 +1,94 @@
+const express = require('express')
+const router = express.Router()
+const comments = require('../modules/comments')
+const article = require('../modules/article')
+const users = require('../modules/users')
+const userReads = require('../modules/userReads')
+
+
+
+
+router.post('/', async (req, res) => {
+    try {
+        const result = await comments.addComment(req.body)
+        res.redirect('/comments?id=' + req.body.articleID)
+    } catch(err) {
+        console.error('Error adding comment:', err)
+        res.status(500).send('Error adding comment')
+    }
+})
+
+
+router.get('/', async (req, res) => {
+    try {
+        const id = req.query.id
+        const Article = await article.getArticleById(id)
+        const com = await comments.getArticleById(id)
+        
+        await userReads.addRead(req.session.user._id, id)
+
+        const allComments = await Promise.all(com.map(async data => {
+            if (data.userID && data.userID.profilePhoto) {
+                data.imageBase64 = data.userID.profilePhoto.toString('base64')
+            } else {
+                data.imageBase64 = ''
+            }
+            return data
+        }))
+        
+        let imageBase64=""
+        let isLiked = false
+        let isBookmarked = false
+        
+        if (req.session.user) {
+            if(req.session.user.profilePhoto){
+                const img = await users.findUserById(req.session.user._id)
+                if(img && img.profilePhoto){
+                    imageBase64 = img.profilePhoto.toString('base64')
+                }
+            }
+            
+            const likes = require('../modules/likes')
+            const bookmarks = require('../modules/bookmarks')
+            
+            const userLike = await likes.checkLike(id, req.session.user._id)
+            isLiked = !!userLike
+            
+            const userBookmark = await bookmarks.checkBookmark(id, req.session.user._id)
+            isBookmarked = !!userBookmark
+        }
+
+        const data = { Article, com: allComments, imageBase64, isLiked, isBookmarked }
+        res.render('readArticle', { data })
+    } catch(err) {
+        console.error('Error loading comments:', err)
+        res.status(500).send('Error loading article')
+    }
+})
+
+router.get('/json', async (req, res) => {
+    try {
+        const id = req.query.id
+        const Article = await article.getArticleById(id)
+        const com = await comments.getArticleById(id)
+        const imageBase64 = ""
+        const data = { Article, com, imageBase64 }
+        res.send(data)
+    } catch(err) {
+        console.error('Error in /json route:', err)
+        res.status(500).send({ error: 'Error loading data' })
+    }
+})
+
+router.get('/delete' , async (req,res) => {
+    try {
+        const id = await req.query.id
+        await comments.removeCommentById(id)
+        res.redirect('/comments?id='+ req.query.articleID)
+    } catch(err) {
+        console.error('Error deleting comment:', err)
+        res.status(500).send('Error deleting comment')
+    }
+})
+
+module.exports = router
